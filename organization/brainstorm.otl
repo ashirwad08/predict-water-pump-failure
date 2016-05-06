@@ -1,0 +1,87 @@
+proj McNulty
+	Team name: Hans and Franz
+	Team
+		JG
+		AC
+		KT
+		JC
+		AK
+	decided project: pump it up
+		https://www.drivendata.org/competitions/7/page/23/	
+	project ideas
+		something with images
+			climate
+			head counts
+		something new
+		data available	
+Meeting
+	ws2016-05-06-data exploration 
+		1. amount_tsh
+			what does zero mean?
+			-> does it overlap with all the non-functional pump
+		2. map
+			functional and non-functional are abundant
+			need repairs seem to fall in between
+TASKS
+	[_] 9% milestones
+		[X] 100% kickoff
+			@start(2016-05-02-15:00)
+		[_] 0% topic decided
+			@start(2016-05-03-16:00)
+		[_] 0% tasks explained / assigned
+			@start(2016-05-04-16:00)
+		[_] 0% workshop-modeling activities (pair?)
+			@start(2016-05-06-16:00)
+		[_] 0% workshop-presentation outlines
+			@start(2016-05-09-16:00)
+		[_] 0% workshop-modeling results, pres tools
+			@start(2016-05-11-16:00)
+			@depends(!!WBS.modeling_work.benchmark)
+		[_] 0% workshop-draft ready
+			@start(2016-05-13-16:00)
+		[_] 0% workshop-presentation frame ready
+			@start(2016-05-16-16:00)
+			@depends(!!WBS.modeling_work.immodel)
+		[_] 0% workshop-presentation almost ready
+			@start(2016-05-18-16:00)
+		[_] 0% workshop-touch up
+			@start(2016-05-18-16:00)
+		[_] 0% deliver results/ presentation
+			@maxend(2016-05-20-12:00)
+			@depends(!!WBS)
+	[_] 33% WBS
+		@depends(!milestones.kickoff)
+		[X] 100% admin
+			[X] decide on team name
+				2016-05-03 [16:35:42 -- 16:44:29] -> 0.15 h
+			[X] register a team
+				2016-05-03 [16:35:42 -- 16:44:29] -> 0.15 h
+			[X] individual sign up
+				2016-05-03 [17:05:42 -- 17:14:29] -> 0.15 h
+		[_] 0% modeling work
+			[_] one successful running case (very basic)
+				@task(onesuccess)
+				@effort(6h)
+			[_] reach benchmark 0.82
+				@effort(6h)
+				@task(benchmark)
+			[_] imporoved modeld (> benchmark)
+				@effort(6h)
+				@task(immodel)
+		[_] % focused elements
+			[_] % vis work
+				[_] tool exploration (tableau plotly...etc.)
+				[_] % mapping well locations
+					[_] data points
+					[_] overlap with map
+			[_] % interpretation of data
+				[_] best combination (company)
+				[_] need more well
+		[_] 0% presentation
+			@depends(!!milestones.workshop_presentation_outlines)
+			@seq
+			[_] outline
+				@effort(2h)
+			[_] touch-up
+				@depends(!!!milestones.workshop_touch_up)
+				@effort(6h)

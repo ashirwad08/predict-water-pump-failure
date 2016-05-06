@@ -1,0 +1,209 @@
+flags  seq ,  ORIGTEXT
+	task milestones
+"milestones" {
+		task kickoff
+"kickoff" {
+			start 2016-05-02-15:00
+			flags ORIGTEXT
+}
+
+		task topic_decided
+"topic decided" {
+			start 2016-05-03-16:00
+			flags ORIGTEXT
+}
+
+		task tasks_explained___assigned
+"tasks explained / assigned" {
+			start 2016-05-04-16:00
+			flags ORIGTEXT
+}
+
+		task workshop_modeling_activities__pair
+"workshop-modeling activities (pair?)" {
+			start 2016-05-06-16:00
+			flags ORIGTEXT
+}
+
+		task workshop_presentation_outlines
+"workshop-presentation outlines" {
+			start 2016-05-09-16:00
+			flags ORIGTEXT
+}
+
+		task workshop_modeling_results__pres_tools
+"workshop-modeling results, pres tools" {
+			start 2016-05-11-16:00
+			depends !!WBS.modeling_work.benchmark
+			flags ORIGTEXT
+			flags ORIGTEXT
+}
+
+		task workshop_draft_ready
+"workshop-draft ready" {
+			start 2016-05-13-16:00
+			flags ORIGTEXT
+}
+
+		task workshop_presentation_frame_ready
+"workshop-presentation frame ready" {
+			start 2016-05-16-16:00
+			depends !!WBS.modeling_work.immodel
+			flags ORIGTEXT
+			flags ORIGTEXT
+}
+
+		task workshop_presentation_almost_ready
+"workshop-presentation almost ready" {
+			start 2016-05-18-16:00
+			flags ORIGTEXT
+}
+
+		task workshop_touch_up
+"workshop-touch up" {
+			start 2016-05-18-16:00
+			flags ORIGTEXT
+}
+
+		task deliver_results__presentation
+"deliver results/ presentation" {
+			maxend 2016-05-20-12:00
+			depends !!WBS
+			flags ORIGTEXT
+			flags ORIGTEXT
+}
+}
+
+	task WBS
+"WBS" {
+		depends !milestones.kickoff
+		flags ORIGTEXT
+		task admin
+"admin" {
+			task decide_on_team_name
+"decide on team name" {
+				effort 2h
+				allocate jc
+				actl:effort 0.5h
+}
+
+			task register_a_team
+"register a team" {
+				effort 2h
+				allocate jc
+				actl:effort 0.5h
+}
+
+			task individual_sign_up
+"individual sign up" {
+				effort 2h
+				allocate jc
+				actl:effort 0.5h
+}
+}
+
+		task modeling_work
+"modeling work" {
+			task onesuccess
+"one successful running case (very basic)" {
+				complete 0
+				allocate jc
+				effort 6h
+				flags ORIGTEXT
+				flags ORIGTEXT
+}
+
+			task benchmark
+"reach benchmark 0.82" {
+				complete 0
+				allocate jc
+				effort 6h
+				flags ORIGTEXT
+				flags ORIGTEXT
+}
+
+			task immodel
+"imporoved modeld (> benchmark)" {
+				complete 0
+				allocate jc
+				effort 6h
+				flags ORIGTEXT
+				flags ORIGTEXT
+}
+}
+
+		task focused_elements
+"focused elements" {
+			task vis_work
+"vis work" {
+				task tool_exploration__tableau_plotly___etc
+"tool exploration (tableau plotly...etc.)" {
+					complete 0
+					effort 2h
+					allocate jc
+}
+
+				task mapping_well_locations
+"mapping well locations" {
+					task data_points
+"data points" {
+						complete 0
+						effort 2h
+						allocate jc
+}
+
+					task overlap_with_map
+"overlap with map" {
+						complete 0
+						effort 2h
+						allocate jc
+}
+}
+}
+
+			task interpretation_of_data
+"interpretation of data" {
+				task best_combination__company
+"best combination (company)" {
+					complete 0
+					effort 2h
+					allocate jc
+}
+
+				task need_more_well
+"need more well" {
+					complete 0
+					effort 2h
+					allocate jc
+}
+}
+}
+
+		task presentation
+"presentation" {
+			depends !!milestones.workshop_presentation_outlines
+			flags ORIGTEXT
+			flags ORIGTEXT
+			flags seq
+			task outline
+"outline" {
+				complete 0
+				allocate jc
+				effort 2h
+				flags ORIGTEXT
+}
+
+			task touch_up
+"touch-up" {
+				complete 0
+				allocate jc
+				depends !!!milestones.workshop_touch_up
+				effort 6h
+				depends !outline
+				flags ORIGTEXT
+				flags ORIGTEXT
+}
+}
+}
+
+
