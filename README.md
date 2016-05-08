@@ -1,13 +1,17 @@
-<<<<<<< HEAD
+
 # Pump It Up! Data Mining the Water Table 
 A [DrivenData.org competition](https://www.drivendata.org/competitions/7/page/25/) undertaken by Metis Data Science Fellows (Spring 2016):  
-[Ash Chakraborty](@ashirwad08)  
-[Anthony Kim](@ak2912)  
-[Ketan Patel](@knpatel401)  
-[Jay Gondin](@jgondin)  
-[Janine Cheng](@jcc-ne) 
+* https://github.com/ashirwad08)  
+* https://github.com/ak29s12  
+* https://github.com/knpatel401 
+* https://github.com/jgondin  
+* https://github.com/jcc-ne 
+---  
 
-# APPENDIX - PROJECT NOTES
+
+# APPENDIX - PROJECT NOTES  
+
+[iPython Notebook with investigations](./data_discovery.ipynb)
 
 ## Data Discovery
 Overall, 59,400 Observations and 41 Features. Attempt to predict the operational status of water pumps in Tanzania.  
@@ -45,11 +49,16 @@ Overall, 59,400 Observations and 41 Features. Attempt to predict the operational
 #### Location Variables
 * _gps_height_: Altitude of the well
     * assuming “0” is ground level and not missing!
-    * more wells at lower altitudes but can’t really tell if gps_height discerns well between classes
-=======
-# predict-water-pump-failure
+    * more wells at lower altitudes but can’t really tell if gps_height discerns well between classes  
+* Latitude, Longitude, V gps_height, 3D plot confirms that there are more _"non functional"_ pumps at ground level and in higher altitudes to the South, and _"functional need repair"_ pumps at higher North-Western altitudes.  
+
+---   
+
+
+# APPENDIX - MISC  
+
+## predict-water-pump-failure
 * Team "Hans and Franz", competing in the Driven Data challenge https://www.drivendata.org/competitions/7/page/23/ 
 
-* see project planing/progress:
-https://htmlpreview.github.io/?https://raw.githubusercontent.com/https://github.com/ashirwad08/predict-water-pump-failure/master/organization/brainstorm_planing/Overview.html
->>>>>>> 8b4e4849c373ba5c9e18b85b9342f3290e8c9da4
+* [see project planing/progress](https://htmlpreview.github.io/?https://raw.githubusercontent.com/https://github.com/ashirwad08/predict-water-pump-failure/master/organization/brainstorm_planing/Overview.html) 
+
