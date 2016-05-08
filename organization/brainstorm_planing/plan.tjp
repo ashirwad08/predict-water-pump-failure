@@ -1,0 +1,85 @@
+project simple "Tasks List" "1.0" 2016-05-01 +3m {
+
+  timezone "America/Los_Angeles"
+  timeformat "%Y-%m-%d"
+  timingresolution 30 min
+  numberformat "-" "" "," "." 1
+  currencyformat "(" ")" "," "." 0
+  # now 2015-02-18-10:00
+  # dailyworkinghours 8
+  currency "EUR"
+  workinghours mon - fri 15:30 - 18:00
+  scenario plan "Plan" {
+    scenario actl "Actual"
+  }
+  trackingscenario actl
+}
+
+# --- global variables
+flags done, must, could, should, followUp, req, new, wait, maybe, lcm, ed, ed2, ed_bd, geodict, gmem, dropped, cancelled, later
+
+include "resources.tji"
+include "report.tji"
+include "tasks.tji"
+include "report_projs.tji"
+include "recurrent.tasks.tji"
+include "supplement.tji"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

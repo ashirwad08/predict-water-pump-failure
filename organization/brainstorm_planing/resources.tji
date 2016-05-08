@@ -1,0 +1,99 @@
+# global level holidays
+flags must, could, should, followUp, req, new, wait, maybe, lcm, ed, ed2, ed_bd, geodict
+leaves holiday "Good Friday" 2015-04-03
+leaves holiday "Easter Monday" 2015-04-06
+leaves holiday "Labor Day" 2015-05-01
+leaves holiday "Christi Himmelfahrt" 2015-05-14
+leaves holiday "Pfingsmontag" 2015-05-25
+leaves holiday "Corpus Christi" 2015-06-04
+
+account teamCost "Team budget"
+{
+  aggregate resources
+}
+account cost "Internal Cost"
+{
+  account jc "JC"
+  account gv "GV"
+}
+
+account revenue "Payments"
+{
+  account jc_pay "JC"
+  account GV_pay "GV"
+}
+
+balance cost revenue
+
+# accountreport "TeamBudget" {
+#   formats html
+#   # accountroot teamCost
+#   # balance cost revenue
+#   columns no, name, weekly { celltext 1 "<-query attribute='turnover'->"}
+# }
+# accountreport "ProfiAndLoss"{
+#   formats html
+#   columns no, name, weekly
+# }
+
+shift learn "Learn" {
+    workinghours sun-sat 8:00 - 10:00, 13:00 - 14:00
+}
+
+shift planed "Planed" {
+  workinghours mon 9:00 - 12:00, 13:30 - 18:00
+  workinghours tue 9:00 - 12:00, 13:30 - 18:00
+  workinghours wed 9:00 - 12:00, 13:30 - 18:00
+  workinghours thu 9:00 - 12:00, 13:30 - 18:00
+  workinghours fri 9:00 - 12:00, 13:30 - 18:00
+  workinghours sat, sun off
+}
+
+shift computer "Computer Power" {
+  workinghours sun-sat 0:00 - 24:00
+}
+
+
+shift dailyAdmin "Daily Admin" {
+  workinghours mon, tue, wed, thu, fri  07:00 - 08:00
+  workinghours sat, sun off
+}
+shift eveningAdmin "Evening Admin" {
+  workinghours mon, tue, wed, thu, fri  16:00 - 17:00
+  workinghours sat, sun off
+}
+
+shift deadline "Deadline" {
+  workinghours mon 8:00 - 12:00, 13:00 - 17:00
+  workinghours tue 8:00 - 12:00, 13:00 - 17:00
+  workinghours wed 8:00 - 12:00, 13:00 - 17:00
+  workinghours thu 8:00 - 12:00, 13:00 - 17:00
+  workinghours fri 8:00 - 12:00, 13:00 - 17:00
+  workinghours sat 10:00 - 12:00, 13:00 - 18:00
+}
+
+resource jc "Hans n Franz" {
+#  shifts planed 2016-01-01 - 2016-03-18, deadline 2016-03-18 - 2016-04-06, planed 2016-04-07 - 2016-12-31
+#  vacation 2015-02-25
+#  vacation 2015-03-03 - 2015-03-15
+#  vacation 2015-04-07 - 2015-04-09
+#  vacation 2015-05-26 - 2015-06-06
+#  vacation 2015-06-26
+#  vacation 2015-06-30
+#  vacation 2015-07-03 - 2015-07-10
+#  vacation 2015-12-29 - 2016-01-14
+#  vacation 2016-03-04 - 2016-03-08
+#  leaves sick 2015-04-15 - 2015-04-18
+#  rate 1500
+  chargeset teamCost
+}
+
+resource team "Team" {
+  chargeset teamCost
+  resource team0 "Team 0"
+  resource team1 "Team 1"
+  resource team2 "Team 2"
+  resource team3 "Team 3"
+  resource team4 "Team 4"
+}
+

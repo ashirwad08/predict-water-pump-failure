@@ -1,0 +1,17 @@
+
+textreport frame_proj "" {
+  header -8<-
+    == Projects 2016 ==
+    go back to [[Overview]]
+    <[navigator id="navbar"]>
+    ->8-
+  textreport index "ProjectBreakDown" {
+    formats html
+    center -8<-
+    Please click the project or go back to [[Overview]]
+    The following projects are being tracked
+    (op means operations instead of projects):
+    
+   ->8-
+}
+}

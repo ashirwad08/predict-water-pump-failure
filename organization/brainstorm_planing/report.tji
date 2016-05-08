@@ -1,0 +1,549 @@
+
+macro TaskTip [
+  tooltip istask() -8<-
+    '''ID: ''' <-query attribute='id'->
+    ----
+    '''Start: ''' <-query attribute='start'->
+    '''End: ''' <-query attribute='end'->
+    '''Complete:''' <-query attribute='complete'->
+    ----
+    '''Effort: (Working time)''' <-query attribute='effort'->
+
+    '''Duration (Calender time): ''' <-query attribute='duration'->
+
+    '''Priority: ''' <-query attribute='priority' ->
+
+    ----
+    '''Resources:'''
+
+    <-query attribute='resources'->
+    ----
+    '''Precursors: '''
+
+    <-query attribute='precursors'->
+    ----
+    '''Followers: '''
+
+    <-query attribute='followers'->
+    ----
+    '''Flags'''
+
+    <-query attribute='flags'->
+    ->8-
+
+]
+macro cellcol [
+  cellcolor (plan.end < ${now} ) & (plan.gauge = "behind schedule") "#FF0000"
+  cellcolor plan.gauge = "behind schedule" "#FFFF00"
+]
+
+macro newcol [
+  cellcolor new "#6A5ACD"
+]
+
+# Macro to set the background color of a cell according to the alert
+# level of the task.
+macro AlertColor [
+  cellcolor plan.alert = 0 "#00D000" # green
+  cellcolor plan.alert = 1 "#D0D000" # yellow
+  cellcolor plan.alert = 2 "#D00000" # red
+]
+
+resourcereport monthlyJan "" {
+  period 2016-01-01 - 2016-02-01
+  scenarios actl
+  loadunit shortauto
+  headline "January"
+  columns bsi { title 'WBS' }, name {width 330}, start{${newcol}}, end, effort { title "Work" },
+          duration, cost, revenue, scenario, chart { ${TaskTip} scale day width 500 }
+  timeformat "%Y-%m-%d"
+  hideresource (treelevel() > 2)
+  hidetask ((actl.end < 2016-01-01) | (actl.start > 2016-01-31))
+  sortresources name.up
+}
+
+resourcereport monthlyFeb "" {
+  period 2016-02-01 - 2016-03-01
+  scenarios actl
+  loadunit shortauto
+  headline "Februrary"
+  columns bsi { title 'WBS' }, name {width 330}, start{${newcol}}, end, effort { title "Work" },
+          duration, cost, revenue, scenario, chart { ${TaskTip} scale day width 500 }
+  timeformat "%Y-%m-%d"
+  hideresource (treelevel() > 2)
+  hidetask ((actl.end < 2016-02-01) | (actl.start > 2016-02-29))
+  sortresources name.up
+}
+
+
+resourcereport monthlyMar "" {
+  period 2016-03-01 - 2016-04-01
+  scenarios actl
+  loadunit shortauto
+  headline "March"
+  columns bsi { title 'WBS' }, name {width 330}, start{${newcol}}, end, effort { title "Work" },
+          duration, cost, revenue, scenario, chart { ${TaskTip} scale day width 500 }
+  timeformat "%Y-%m-%d"
+  hideresource (treelevel() > 2)
+  hidetask ((actl.end < 2016-03-01) | (actl.start > 2016-03-31))
+  sortresources name.up
+}
+
+resourcereport monthlyApr "" {
+  period 2016-04-01 - 2016-05-01
+  scenarios actl
+  loadunit shortauto
+  headline "April"
+  columns bsi { title 'WBS' }, name {width 330}, start{${newcol}}, end, effort { title "Work" },
+          duration, cost, revenue, scenario, chart { ${TaskTip} scale day width 500 }
+  timeformat "%Y-%m-%d"
+  hideresource (treelevel() > 2)
+  hidetask ((actl.end < 2016-04-01) | (actl.start > 2016-04-30))
+  sortresources name.up
+}
+
+resourcereport monthlyMay "" {
+  period 2016-05-01 - 2016-06-01
+  scenarios actl
+  loadunit shortauto
+  headline "May"
+  columns bsi { title 'WBS' }, name {width 330}, start{${newcol}}, end, effort { title "Work" },
+          duration, cost, revenue, scenario, chart { ${TaskTip} scale day width 500 }
+  timeformat "%Y-%m-%d"
+  hideresource (treelevel() > 2)
+  hidetask ((actl.end < 2016-05-01) | (actl.start > 2016-05-31))
+  sortresources name.up
+}
+
+resourcereport monthlyJun "" {
+  period 2016-06-01 - 2016-07-01
+  scenarios actl
+  loadunit shortauto
+  headline "Jun"
+  columns bsi { title 'WBS' }, name {width 330}, start{${newcol}}, end, effort { title "Work" },
+          duration, cost, revenue, scenario, chart { ${TaskTip} scale day width 500 }
+  timeformat "%Y-%m-%d"
+  hideresource (treelevel() > 2)
+  hidetask ((actl.end < 2016-06-01) | (actl.start > 2016-06-30))
+  sortresources name.up
+}
+
+resourcereport monthlyJul "" {
+  period 2016-07-01 - 2016-08-01
+  scenarios actl
+  loadunit shortauto
+  headline "Jul"
+  columns bsi { title 'WBS' }, name {width 330}, start{${newcol}}, end, effort { title "Work" },
+          duration, cost, revenue, scenario, chart { ${TaskTip} scale day width 500 }
+  timeformat "%Y-%m-%d"
+  hideresource (treelevel() > 2)
+  hidetask ((actl.end < 2016-07-01) | (actl.start > 2016-07-31))
+  sortresources name.up
+}
+
+resourcereport monthlyAug "" {
+  period 2016-08-01 - 2016-09-01
+  scenarios actl
+  loadunit shortauto
+  headline "Aug"
+  columns bsi { title 'WBS' }, name {width 330}, start{${newcol}}, end, effort { title "Work" },
+          duration, cost, revenue, scenario, chart { ${TaskTip} scale day width 500 }
+  timeformat "%Y-%m-%d"
+  hideresource (treelevel() > 2)
+  hidetask ((actl.end < 2016-08-01) | (actl.start > 2016-08-31))
+  sortresources name.up
+}
+
+resourcereport monthlySep "" {
+  period 2016-09-01 - 2016-10-01
+  scenarios actl
+  loadunit shortauto
+  headline "Sep"
+  columns bsi { title 'WBS' }, name {width 330}, start{${newcol}}, end, effort { title "Work" },
+          duration, cost, revenue, scenario, chart { ${TaskTip} scale day width 500 }
+  timeformat "%Y-%m-%d"
+  hideresource (treelevel() > 1)
+  hidetask ((actl.end < 2016-09-01) | (actl.start > 2016-09-30))
+  sortresources name.up
+}
+
+resourcereport monthlyOct "" {
+  period 2016-10-01 - 2016-11-01
+  scenarios actl
+  loadunit shortauto
+  headline "Oct"
+  columns bsi { title 'WBS' }, name {width 330}, start{${newcol}}, end, effort { title "Work" },
+          duration, cost, revenue, scenario, chart { ${TaskTip} scale day width 500 }
+  timeformat "%Y-%m-%d"
+  hideresource (treelevel() > 1)
+  hidetask ((actl.end < 2016-10-01) | (actl.start > 2016-10-31))
+  sortresources name.up
+}
+
+resourcereport monthlyNov "" {
+  period 2016-11-01 - 2016-12-01
+  scenarios actl
+  loadunit shortauto
+  headline "Nov"
+  columns bsi { title 'WBS' }, name {width 330}, start{${newcol}}, end, effort { title "Work" },
+          duration, cost, revenue, scenario, chart { ${TaskTip} scale day width 500 }
+  timeformat "%Y-%m-%d"
+  hideresource (treelevel() > 1)
+  hidetask ((actl.end < 2016-11-01) | (actl.start > 2016-11-30))
+  sortresources name.up
+}
+
+resourcereport monthlyDec "" {
+  period 2016-12-01 - 2017-01-01
+  scenarios actl
+  loadunit shortauto
+  headline "Dec"
+  columns bsi { title 'WBS' }, name {width 330}, start{${newcol}}, end, effort { title "Work" },
+          duration, cost, revenue, scenario, chart { ${TaskTip} scale day width 500 }
+  timeformat "%Y-%m-%d"
+  hideresource (treelevel() > 1)
+  hidetask ((actl.end < 2016-12-01) | (actl.start > 2016-12-31))
+  sortresources name.up
+}
+
+
+
+
+
+resourcereport resourceGraph "Resources" {
+  scenarios plan, actl
+  headline "Resource Allocation Graph"
+  columns no, name {width 350 ${TaskTip} ${newcol}}, effort, rate, cost, balance, scenario, daily { ${TaskTip} }
+
+  loadunit shortauto
+  # We only like to show leaf tasks for leaf resources.
+  hidetask ~(isleaf() & isleaf_())
+  sorttasks plan.start.up
+}
+
+taskreport today "" {
+  scenarios actl
+  header -8<-
+    === Project Plan ===
+  ->8-
+  columns bsi { title 'WBS' },
+          name {width 300}, complete, effort, duration, chart{${TaskTip} scale hour width 500}
+  # For this report we like to have the abbreviated weekday in front
+  # of the date. %a is the tag for this.
+  timeformat "%a %b%d"
+  loadunit hours
+  # hideresource @none
+  #hideresource ~(isleaf() & isleaf_())
+  hideresource @all
+  sortresources name.up
+  caption 'All effort values are in man hours. ** subtasks < 35min are hiden.  '
+  period %{${now} - 2d} +4d
+  hidetask ~((actl.start <= %{${now} +2d}) & (actl.end > %{${now}- 2d}))
+}
+
+taskreport thisMonth "" {
+  scenarios actl
+  header -8<-
+    === Project Plan ===
+  ->8-
+  columns bsi { title 'WBS' },
+          name {width 300}, complete, effort, duration, chart{${TaskTip} scale day width 500}
+  # For this report we like to have the abbreviated weekday in front
+  # of the date. %a is the tag for this.
+  timeformat "%a %b%d"
+  loadunit hours
+  # hideresource @none
+  #hideresource ~(isleaf() & isleaf_())
+  hideresource @all
+  sortresources name.up
+  caption 'All effort values are in man hours. ** subtasks < 35min are hiden.  '
+  period %{${now} - 2w} +4w
+  hidetask ~((actl.start <= %{${now} +2w}) & (actl.end > %{${now}- 2w})) | (isleaf() & (plan.effort < 0.07) & ~ismilestone(plan))
+}
+
+taskreport overview "" {
+  header -8<-
+    === Project Overview ===
+
+    This task report outlines the activity of 2016.
+    While on-the-fly tasks added or any work delayed the actual plan is added to compare the original one.
+
+    === Original Project Plan ===
+  ->8-
+  columns bsi { title 'WBS' },
+          name {width 350}, start{${newcol}}, end, effort, chart{${TaskTip} scale day width 400}
+  # For this report we like to have the abbreviated weekday in front
+  # of the date. %a is the tag for this.
+  timeformat "%a %Y-%m-%d"
+  loadunit hours
+  # hideresource @none
+  # hideresource (isleaf() & isleaf_())
+  hidetask (new) | (isleaf() & (plan.effort < 0.07) & ~ismilestone(plan))
+  hideresource @all
+  sortresources name.up
+  sorttasks tree
+  caption 'All effort values are in man hours.'
+}
+taskreport overview_actual "" {
+  header -8<-
+    === Actual Project Plan ===
+  ->8-
+  scenarios actl
+  columns bsi { title 'WBS' },
+          name {width 350}, start{${newcol}}, end, effort, chart{${TaskTip} scale day width 400}
+  # For this report we like to have the abbreviated weekday in front
+  # of the date. %a is the tag for this.
+  timeformat "%a %Y-%m-%d"
+  loadunit hours
+  # hideresource @none
+  # hideresource (isleaf() & isleaf_())
+  # hidetask (treelevel() > 3)
+  hidetask (isleaf() & (plan.effort < 0.07) & ~ismilestone(plan))
+  hideresource @all
+  sortresources name.up
+  sorttasks tree
+  caption 'All effort values are in man hours.  ** subtasks < 35min are hiden.   On-the-fly cases\' start date is <fcol:#6A5ACD> highlighted </fcol>'
+
+}
+
+taskreport status "" {
+  columns bsi { width 50 title 'WBS' }, name { width 250 },
+  start { width 100 }, end { width 100 },
+        effort { width 100 },
+        alert { tooltip plan.journal
+          != '' "<-query attribute='journal'->" width 150 },
+        status { width 150 }
+  scenarios actl
+  loadunit shortauto
+
+  taskreport dashboard "" {
+    headline "Project Dashboard (<-query attribute='now'->)"
+    columns name { title "Task" ${AlertColor} width 250 ${TaskTip}},
+    resources { width 150 ${AlertColor}
+      listtype bullets
+      listitem "<-query attribute='name'->"
+      start ${projectstart} end ${projectend} },
+              alerttrend { title "Trend" ${AlertColor} width 100 },
+              journal { width 400 ${AlertColor} }
+    journalmode status_up
+    journalattributes headline, author, date, summary, details
+    hidetask ~(hasalert(0) & ~wait)
+    sorttasks alert.down, actl.end.up
+#    period %{${now} - 1} +1w
+  }
+
+  taskreport waitingFor "" {
+    headline "Waiting For (<-query attribute='now'->)"
+    columns name { title "Task" ${AlertColor} width 250 ${TaskTip}},
+    resources { width 150 ${AlertColor}
+       listtype bullets
+          listitem "<-query attribute='name'->"
+          start ${projectstart} end ${projectend} },
+    alerttrend { title "Trend" ${AlertColor} width 100 },
+    journal { width 400 ${AlertColor} }
+    journalmode status_up
+    journalattributes headline, author, date, summary, details
+    hidetask ~(wait) | (done) | (actl.start > %{${now} + 4h})
+
+    sorttasks alert.down, actl.end.up
+    # period ${projectstart} - %{${now} + 1h}
+  }
+  taskreport unplaned "" {
+    headline "On-the-fly tasks"
+    scenarios actl
+    loadunit shortauto
+    hidetask ~(new)
+  }
+  taskreport completed "" {
+    headline "Already completed tasks"
+    hidetask ~(actl.end <= ${now})
+  }
+  taskreport ongoing "" {
+    headline "Ongoing tasks"
+    hidetask ~((actl.start <= ${now}) & (actl.end > ${now}))
+  }
+  taskreport future "" {
+    headline "Near future tasks"
+#    hidetask (actl.start <= ${now} & could)
+    hidetask ~(actl.start > ${now} & ~(could|maybe))
+  }
+
+  taskreport followup "" {
+    headline "Follow Up"
+    hidetask (done) | ~(followUp)
+  }
+
+  taskreport farfuture "" {
+    headline "Could & Maybe"
+    hidetask ~(actl.start > ${now} & (could|maybe|later))
+  }
+  taskreport cancelled "" {
+    headline "Cancelled/Dropped"
+    hidetask ~(cancelled)
+  }
+}
+
+# A list of tasks showing the resources assigned to each task.
+# taskreport development "" {
+#   scenarios plan, actl
+#   loadunit shortauto
+#   headline "Development - Resource Allocation Report"
+#   columns bsi { title 'WBS' }, name {width 330}, start{${newcol}}, end, effort { title "Work" },
+#           duration, cost, revenue, scenario, chart { ${TaskTip} scale day width 500 }
+#   timeformat "%Y-%m-%d"
+#   # hideresource ~(isleaf() & isleaf_())
+#   hideresource (treelevel() > 1)
+#   sortresources name.up
+# }
+
+# A list of all tasks with the percentage completed for each task
+taskreport deliveries "" {
+  headline "Project Deliverables"
+  columns bsi { title 'WBS' }, name {width 300}, start, end { ${cellcol}}, priority, complete,
+          chart {${TaskTip} scale day width 400  }
+  # taskroot Projects
+  hideresource @all
+  # scenarios plan, actl
+  hidetask (plan.priority < 500) | ~ismilestone(plan)
+  scenarios plan
+}
+# A list of all employees with their contact details.
+
+navigator navbar {
+  hidereport @none
+}
+
+textreport frame "" {
+  header -8<-
+    == 2016 Tasks ==
+    For individual project plans, see [[ProjectBreakDown]].
+    <[navigator id="navbar"]>
+  ->8-
+  footer "----"
+  textreport index "Overview" {
+    formats html
+    center -8<-
+    <[report id="overview"]>
+    ----
+    <[report id="overview_actual"]>
+    ->8-
+    footer -8<-
+    === Staffing ===
+
+    All project phases are properly staffed. See [[ResourceGraph]] for
+    detailed resource allocations.
+
+    === Current Status ===
+
+    project started off with a delay of 4 days. This slightly affected
+    the original schedule. See [[Deliveries]] for the impact on the
+    delivery dates.
+    ->8-
+  }
+
+  textreport today "Today(&Tomorrow)" {
+    formats html
+    center '<[report id="today"]>'
+  }
+
+  textreport thisMonth "Recently" {
+    formats html
+    center '<[report id="thisMonth"]>'
+  }
+
+  textreport "Status" {
+    formats html
+    center -8<-
+      <[report id="status.dashboard"]>
+      ----
+      <[report id="status.waitingFor"]>
+      ----
+      <[report id="status.unplaned"]>
+      ----
+      <[report id="status.completed"]>
+      ----
+      <[report id="status.ongoing"]>
+      ----
+      <[report id="status.future"]>
+      ----
+      <[report id="status.followup"]>
+      ----
+      <[report id="status.farfuture"]>
+      ----
+      <[report id="status.cancelled"]>
+    ->8-
+  }
+
+#  textreport development "Development" {
+#    formats html
+#    center '<[report id="development"]>'
+#  }
+
+  textreport "Deliveries" {
+    formats html
+    center '<[report id="deliveries"]>'
+  }
+
+#  textreport "ContactList" {
+#    formats html
+#    title "Contact List"
+#    center '<[report id="contactList"]>'
+#  }
+#  textreport "ResourceGraph" {
+#    formats html
+#    title "Resource Graph"
+#    center '<[report id="resourceGraph"]>'
+#  }
+
+# move monthly breakdown
+#    <[report id="monthlyJan"]>
+#    ----
+#    <[report id="monthlyFeb"]>
+#    ----
+#    <[report id="monthlyMar"]>
+#    ----
+
+  textreport "MonthlyBreakdown" {
+    formats html
+    title "Monthly breakdown"
+    center -8<-
+    <[report id="monthlyApr"]>
+    ----
+    <[report id="monthlyMay"]>
+    ----
+    <[report id="monthlyJun"]>
+    ----
+    <[report id="monthlyJul"]>
+    ----
+    <[report id="monthlyAug"]>
+    ----
+    <[report id="monthlySep"]>
+    ----
+    <[report id="monthlyOct"]>
+    ----
+    <[report id="monthlyNov"]>
+    ----
+    <[report id="monthlyDec"]>
+    ->8-
+  }
+
+}
+
+
+
+
+# ---- test report
+# tracereport "TraceReport" {
+#  hidetask 0
+#  formats html
+#}
+# taskreport "All_tasks" {
+#
+#   formats html
+# resourcereport "All_resources" {
+#
+#   formats html
+#   columns activetasks, annualleave, annualleavebalance, alert, alertmessages, alertsummaries, alerttrend, balance, bsi, chart, closedtasks, competitorcount, competitors, complete, completed, criticalness, cost, daily, directreports, duration, duties, efficiency, effort, effortdone, effortleft, email, end, flags, followers, freetime, freework, fte, gauge, headcount, hierarchindex, hourly, id, index, inputs, journal, journal_sub, journalmessages, journalsummaries, line, managers, maxend, maxstart, minend, minstart, monthly, no, name, note, opentasks, pathcriticalness, precursors, priority, quarterly, rate, reports, resources, responsible, revenue, scenario, scheduling, seqno, sickleave, specialleave, start, status, targets, turnover, wbs, unpaidleave, weekly, yearly
+#  hidetask @none
+# }
+
