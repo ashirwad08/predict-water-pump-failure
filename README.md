@@ -1,4 +1,8 @@
 
+TEAM NOTE: PLEASE POST ANY USEFUL PLOT IMAGES ON SLACK BY 04/11  
+
+
+
 # Pump It Up! Data Mining the Water Table 
 A [DrivenData.org competition](https://www.drivendata.org/competitions/7/page/25/) undertaken by Metis Data Science Fellows (Spring 2016, San Francisco).  
 
@@ -19,23 +23,25 @@ $$status_group~C(construction_decade)+C(quantity)+population+gps_height+C(basin)
 
 
 ## Data Cleaning Steps
-* __Skip__ over/undersampling to account for under-represented "functional needs repair" class  
-* __Remove__ one data point with recorded_date == 2002  
-* __Bin__ *construction_year* into decades: *construction_decade*
+* __Skip__ over/undersampling to account for under-represented "functional needs repair" class.  Probably don't need this.     
+* ~~Remove~~ one data point with recorded_date == 2002. __Probably don't need this if not using year recorded as a predictor__.  
+  * __Impute__ Treat as numeric since it is a healthy predictor. Maybe impute based on mean construction year of sub-region.  
 * __Skip__ imputing or using *amount_tsh*. Banking on _quantity_ with the assumption that it groups available water to pump.  
-* __Impute__ _population_! We want to use it in our model as a potential predictor (how much a pump is used might be a predictor of health). Suggested strategy is to impute using median population of geographic neighbors.  
-* __Assume__ *gps_height* == 0 indicates sea level. Use in model.  
-* __???__ Lat, Long. These have information, but will we be better off just using "basin" and "region_codes" for MVP?  
+* __Impute__ _population_! We want to use it in our model as a potential predictor (how much a pump is used might be a predictor of health). Suggested strategy is to impute using median population of geographic neighbors. Another strategy: is to get external source of data for population by region code or something similar. Maybe it is meaningful for population to be 0??  
+* __Impute__ *gps_height* == 0 are probably faulty readings! Look at gps_height cummulative proportion stack.    
+* __Skip__ Lat, Long  for first run. These have information, but will we be better off just using "basin" and "region_codes" for MVP? Investigate multicolinearity with region_codes.    
 * __Dummy__ _basin_. Use in model.  
-* __Dummy__ *district_code*. Use in model instead of *region_code*  
+* __Dummy__ *district_code*. Use in model instead of *region_code*. Look into correspondence between district codes, region codes, regions.    
 * __Skip__ bucketing top 20 *funder*s.  
-* __Dummy__ *scheme_management*. Use in model.  
+* __Dummy__ *scheme_management*. Use in model. Validate against *management* for similarity.    
 * __Dummy__ *extraction_type_group*. Use in model.  
 * __Investigate__ if *managment* is same as *scheme_management* using Chi-Squared Test for Ind.  
 * __Dummy__ *water_quality*. Use in model.  
 * __Dummy__ *quantity*. Use in model.  
 * __Investigate__ *source* to see if it has either an interaction effect with *water_quality* or if it is multicollinear with it. Include in model only if former.  
-* __Investigate__ *waterpoint_type* for interaction or multicollinearity with *extraction_type_group*; include only if former as interaction. 
+* __Investigate__ *waterpoint_type* for interaction or multicollinearity with *extraction_type_group*; include only if former as interaction.  
+* __Investigate__ *gps_height* interaction with *waterpoint_type*  
+
 
 
 
