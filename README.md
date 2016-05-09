@@ -8,19 +8,23 @@ A [DrivenData.org competition](https://www.drivendata.org/competitions/7/page/25
 
 Team __Hans'nFranz__ gonna "pump... [the water] up!":  
   
-* [Ash Chakraborty](https://github.com/ashirwad08)  
-* [Anthony Kim](https://github.com/ak2912) 
-* [Ketan Patel](https://github.com/knpatel401) 
-* [Jay Gondin](https://github.com/jgondin)  
-* [Janine Cheng](https://github.com/jcc-ne) 
+* [Ash Chakraborty](https://github.com/ashirwad08) 
+* [Anthony Kim](https://github.com/ak2912)
+* [Ketan Patel](https://github.com/knpatel401)
+* [Jay Gondin](https://github.com/jgondin)
+* [Janine Cheng](https://github.com/jcc-ne)
 
 ---  
 
 # Building Model 1 - M.V.P. 
 See "APPENDIX - Data Discovery Notes" for reasoning. 
 
-$$status_group~C(construction_decade)+C(quantity)+population+gps_height+C(basin)+C(district_codes)+C(scheme_management)+C(extraction_type_group)+C(water_quality)+C(quantity)+C(water_quality*source?)+C(extraction_type_group*waterpoint_type?)$$  
-
+```python
+status_group ~ C(construction_decade) + C(quantity) + population +
+    gps_height + C(basin) + C(district_codes) + C(scheme_management) +
+    C(extraction_type_group) + C(water_quality) + C(quantity) +
+    C(water_quality*source?) + C(extraction_type_group * waterpoint_type?) 
+```
 
 ## Data Cleaning Steps
 * __Skip__ over/undersampling to account for under-represented "functional needs repair" class.  Probably don't need this.     
@@ -51,14 +55,16 @@ $$status_group~C(construction_decade)+C(quantity)+population+gps_height+C(basin)
 [iPython Notebook with investigations](./data_discovery.ipynb)
 
 ## Data Discovery
-Overall, 59,400 Observations and 41 Features. Attempt to predict the operational status of water pumps in Tanzania.  
+Overall, 59,400 Observations and 41 Features. Attempt to predict the operational status of water pumps in [Tanzania](https://en.wikipedia.org/wiki/Tanzania).  
 
 ### Outcome Variable 
-*status_group*, has 3 classes
-* functional (~55%)
-* non functional (~37%)
-* functional needs repair (~7% imbalanced!) 
-    * need oversampling/undersampling strategy
+
+*status_group*, has 3 classes:     
+
+* functional (~55%)   
+* non functional (~37%)   
+* functional needs repair (~7% imbalanced!)    
+    * need oversampling/undersampling strategy   
 
 ### Temporal Variables
 * _date_recorded_: The date the row was entered
