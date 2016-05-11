@@ -43,7 +43,7 @@ There are 3 purely numeric predictors (not factoring in location variables). The
 
 We impute the population with the mean of its neighboring regions (subvillages, ward, lga, region_code).  We see that population informs pump health slightly (or perhaps it's reverse causal): as population goes up (values get sparse beyond a 1000 so it's hard to tell) "non functional" and "functional needs repair" class distribution go up somewhat.  
 
-![Population Distribution by Pump Health](./../figures/kdeplot_population_distribution.png)  
+![Population Distribution by Pump Health](./figures/kdeplot_population_distribution.png)  
 
 * Choosing not to investigate *amount_tsh* for right now.  Too many missing values. 
 * *num_private* has extremely sparse values; there is no description and it's difficult to impute without more domain knowledge. Choosing to exclude from his model.  
@@ -52,7 +52,7 @@ We impute the population with the mean of its neighboring regions (subvillages, 
 
 We're dealing with 2 potential predictors here: *recorded_date* and *construction_year*. Construction year seems to be a healthy predictor of pump health status. The graph below shows, not surprisingly, that older pumps breakdown a lot more than the newer ones. There is also the '0' group which grouped missing construction year.  Pumps needing repair are more or less evenly spread out by age of pump. This facts suggest either that newer pumps breakdown less, or that maintenance is better lately, or both.  
 
-![Construction Year Distribution by Pump Health](./../figures/kdeplot_population_distribution.png)
+![Construction Year Distribution by Pump Health](./figures/kdeplot_population_distribution.png)
 
 
 
