@@ -16,7 +16,7 @@ Team __Hans'nFranz__ gonna "pump... [the water] up!":
 
 ---  
 
-# Building Model 1 - M.V.P. 
+# Baseline Model 1 - M.V.P. 
 See "APPENDIX - Data Discovery Notes" for reasoning. 
 
 ```python
@@ -24,7 +24,26 @@ status_group ~ C(construction_decade) + C(quantity) + population +
     gps_height + C(basin) + C(district_codes) + C(scheme_management) +
     C(extraction_type_group) + C(water_quality) + C(quantity) +
     C(water_quality*source?) + C(extraction_type_group * waterpoint_type?) 
-```
+```  
+
+# Exploratory Findings  
+Outcome 
+
+## Key Predictors  
+On an initial pass, and without an impute strategy for missing values (of which there are quite a few) we see the following relationships between numerics, discretes, and time type predictors that offer some clues as to their candidacy in the initial baseline model.  
+  
+  
+### Numeric Predictors  
+There are 3 purely numeric predictors (not factoring in location variables). There are quite a few missing values amongst our numerics: Specifically, 
+|Numeric Variable | % Missing Values |
+|-----------------|------------------|
+| *amount_tsh     | 70               |
+| *num_private    | 98.7             |
+| *population     | 30               |  
+
+We 
+
+
 
 ## Data Cleaning Steps
 * __Skip__ over/undersampling to account for under-represented "functional needs repair" class.  Probably don't need this.     
@@ -55,7 +74,9 @@ status_group ~ C(construction_decade) + C(quantity) + population +
 [iPython Notebook with investigations](./data_discovery.ipynb)
 
 ## Data Discovery
-Overall, 59,400 Observations and 41 Features. Attempt to predict the operational status of water pumps in [Tanzania](https://en.wikipedia.org/wiki/Tanzania).  
+Overall, 59,400 Observations and 41 Features. Attempt to predict the operational status of water pumps in [Tanzania](https://en.wikipedia.org/wiki/Tanzania).    
+
+
 
 ### Outcome Variable 
 
@@ -64,7 +85,9 @@ Overall, 59,400 Observations and 41 Features. Attempt to predict the operational
 * functional (~55%)   
 * non functional (~37%)   
 * functional needs repair (~7% imbalanced!)    
-    * need oversampling/undersampling strategy   
+    * need oversampling/undersampling strategy    
+
+![Outcome class status_group proportions in dataset](./figures/barchart_outcome_class_proportions.png)  
 
 ### Temporal Variables
 * _date_recorded_: The date the row was entered
