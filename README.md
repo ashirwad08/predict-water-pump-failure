@@ -52,7 +52,7 @@ We impute the population with the mean of its neighboring regions (subvillages, 
 
 We're dealing with 2 potential predictors here: *recorded_date* and *construction_year*. Construction year seems to be a healthy predictor of pump health status. The graph below shows, not surprisingly, that older pumps breakdown a lot more than the newer ones. There is also the '0' group which grouped missing construction year.  Pumps needing repair are more or less evenly spread out by age of pump. This facts suggest either that newer pumps breakdown less, or that maintenance is better lately, or both.  
 
-![Construction Year Distribution by Pump Health](./figures/kdeplot_population_distribution.png)
+![Construction Year Distribution by Pump Health](./figures/barchart_stacked_class_proportions_construction_year.png)
 
 
 
