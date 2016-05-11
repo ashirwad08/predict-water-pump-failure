@@ -27,19 +27,21 @@ status_group ~ C(construction_decade) + C(quantity) + population +
 ```  
 
 # Exploratory Findings  
-Outcome 
+
 
 ## Key Predictors  
 On an initial pass, and without an impute strategy for missing values (of which there are quite a few) we see the following relationships between numerics, discretes, and time type predictors that offer some clues as to their candidacy in the initial baseline model.  
   
   
 ### Numeric Predictors  
-There are 3 purely numeric predictors (not factoring in location variables). There are quite a few missing values amongst our numerics: Specifically, 
-|Numeric Variable | % Missing Values |
-|-----------------|------------------|
-| *amount_tsh     | 70               |
-| *num_private    | 98.7             |
-| *population     | 30               |  
+There are 3 purely numeric predictors (not factoring in location variables). There are quite a few missing values amongst our numerics: Specifically,  
+
+Numeric Variable | % Missing Values 
+-----------------|------------------
+ *amount_tsh     | 70               
+ *num_private    | 98.7             
+ *population     | 36                 
+   
 
 We impute the population with the mean of its neighboring regions (subvillages, ward, lga, region_code).  We see that population informs pump health slightly (or perhaps it's reverse causal): as population goes up (values get sparse beyond a 1000 so it's hard to tell) "non functional" and "functional needs repair" class distribution go up somewhat.  
 
@@ -56,8 +58,18 @@ We're dealing with 2 potential predictors here: *recorded_date* and *constructio
 
 
 
-WORK IN PROGRESS......   
+#### Location Based Predictors  
 
+*gps_height* has about 34.4 % readings equal to 0. It is unlikely that these are true readings since wells are very rarely at exactly sea level. We choose to apply the same impute strategy to *gps_height* as we did for *population* hoping that the mean gps_height in neighboring areas are pretty indicative of missing gps_height values.  
+
+Upon doing so, we observe the gps_height distrbution with respect to the operational status of pumps does vary. In lower altitudes we notice the prevalence of more "non functional" pumps, a prevalence of "functional needs repair" pumps between 500-1500 meters, but slightly more "functional" pumps at higher altitudes.  
+
+![GPS Height Distribution by Pump Health](./figures/kdeplot_gpsheight.png)  
+
+
+Plotting the *latitude* against *longitude* while segmenting by the operational status of the pump gives us an intuitive locational layout of the operational status across Tanzania.  
+
+![Pump Operational Status on Tanzanian Lat/Long](./figures/scatter_latlong1.png)
 
 ## Data Cleaning Steps
 * __Skip__ over/undersampling to account for under-represented "functional needs repair" class.  Probably don't need this.     
