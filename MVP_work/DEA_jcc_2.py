@@ -219,6 +219,7 @@ plt.show()
 # <markdowncell>
 
 # ### Now, let's do some imputation
+# please note that this is not the correct way to do imputation (the correct way should be that we only impute on the training dataset and apply imputation function to the test later), but for now it gives a good indicator that if the missing values are affecting our modeling work.
 # 
 # for population, we'll first try to fill in missing value with the mean of groups
 

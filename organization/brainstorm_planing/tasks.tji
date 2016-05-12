@@ -33,7 +33,7 @@ flags  seq ,  ORIGTEXT
 
 		task workshop_modeling_results__pres_tools
 "workshop-modeling results, pres tools" {
-			start 2016-05-11-16:00
+			start 2016-05-12-16:00
 			depends !!WBS.modeling_work.benchmark
 			flags ORIGTEXT
 			flags ORIGTEXT
@@ -104,6 +104,14 @@ flags  seq ,  ORIGTEXT
 
 		task modeling_work
 "modeling work" {
+			task individual_work_on_DEA__push_to_github
+"individual work on DEA, push to github" {
+				complete 0
+				allocate jc
+				effort 6h
+				flags ORIGTEXT
+}
+
 			task onesuccess
 "one successful running case (very basic)" {
 				complete 0
