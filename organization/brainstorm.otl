@@ -22,20 +22,45 @@ Meeting
 		2. map
 			functional and non-functional are abundant
 			need repairs seem to fall in between
+	ws2016-05-06-data exploration-discussion
+		organizational
+			for project purpose, we will use also external information
+			we are not sure we can use the same for the competition and thus will include a swith
+		Data clean-up
+			construction year 34perc
+				imputation strategy
+					mean value
+					by region
+					by installer
+					geographical data
+			population 36perc
+				imputation strategy
+				figure out population around the well
+				use external source
+			zero values on gps_height 
+				should treat as missing 
+			zero values on lat, long
+				should treat as missing 
+			systematic way to check collinearity
+				TONY
+		modeling strategy		
+			basin as dummy
+			source variable indicates dam availability
+		tasks
 TASKS
-	[_] 9% milestones
+	[_] 36% milestones
 		[X] 100% kickoff
 			@start(2016-05-02-15:00)
-		[_] 0% topic decided
+		[X] 100% topic decided
 			@start(2016-05-03-16:00)
-		[_] 0% tasks explained / assigned
+		[X] 100% tasks explained / assigned
 			@start(2016-05-04-16:00)
-		[_] 0% workshop-modeling activities (pair?)
+		[X] 100% workshop-modeling activities (pair?)
 			@start(2016-05-06-16:00)
 		[_] 0% workshop-presentation outlines
 			@start(2016-05-09-16:00)
 		[_] 0% workshop-modeling results, pres tools
-			@start(2016-05-11-16:00)
+			@start(2016-05-12-16:00)
 			@depends(!!WBS.modeling_work.benchmark)
 		[_] 0% workshop-draft ready
 			@start(2016-05-13-16:00)
@@ -59,6 +84,8 @@ TASKS
 			[X] individual sign up
 				2016-05-03 [17:05:42 -- 17:14:29] -> 0.15 h
 		[_] 0% modeling work
+			[_] individual work on DEA, push to github
+				@effort(6h)
 			[_] one successful running case (very basic)
 				@task(onesuccess)
 				@effort(6h)
