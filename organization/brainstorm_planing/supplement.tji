@@ -1,9 +1,15 @@
-supplement task WBS.admin.register_a_team {
+supplement task WBS.admin.decide_on_team_name {
    actl:booking jc 2016-05-03-17:00:00 +0.5h {overtime 2}
 }
-supplement task WBS.admin.decide_on_team_name {
+supplement task WBS.admin.register_a_team {
    actl:booking jc 2016-05-03-17:30:00 +0.5h {overtime 2}
 }
 supplement task WBS.admin.individual_sign_up {
    actl:booking jc 2016-05-03-18:00:00 +0.5h {overtime 2}
+}
+supplement task WBS.modeling_work.onesuccess {
+   actl:booking jc 2016-05-10-07:00:00 +6h {overtime 2}
+}
+supplement task WBS.modeling_work.individual_work_on_DEA__push_to_github {
+   actl:booking jc 2016-05-10-13:00:00 +6h {overtime 2}
 }
