@@ -72,65 +72,128 @@
           </node>
         </node>
       </node>
+      <node TEXT="ws2016-05-06-data exploration-discussion" ORIGTEXT="&#9;ws2016-05-06-data exploration-discussion&#10;" ID="ID_24" COLOR="#111111">
+        <edge COLOR="#990000" WIDTH="3"/>
+        <node TEXT="organizational" ORIGTEXT="&#9;&#9;organizational&#10;" ID="ID_25" COLOR="#111111">
+          <edge COLOR="#00b439" WIDTH="2"/>
+          <node TEXT="for project purpose, we will use also external information" ORIGTEXT="&#9;&#9;&#9;for project purpose, we will use also external information&#10;" ID="ID_26" COLOR="#111111">
+            <edge COLOR="#990000" WIDTH="1"/>
+          </node>
+          <node TEXT="we are not sure we can use the same for the competition and thus will include a swith" ORIGTEXT="&#9;&#9;&#9;we are not sure we can use the same for the competition and thus will include a swith&#10;" ID="ID_27" COLOR="#111111">
+            <edge COLOR="#990000" WIDTH="1"/>
+          </node>
+        </node>
+        <node TEXT="Data clean-up" ORIGTEXT="&#9;&#9;Data clean-up&#10;" ID="ID_28" COLOR="#111111">
+          <edge COLOR="#6815e1" WIDTH="2"/>
+          <node TEXT="construction year 34perc" ORIGTEXT="&#9;&#9;&#9;construction year 34perc&#10;" ID="ID_29" COLOR="#111111">
+            <edge COLOR="#990000" WIDTH="1"/>
+            <node TEXT="imputation strategy" ORIGTEXT="&#9;&#9;&#9;&#9;imputation strategy&#10;" ID="ID_30" COLOR="#111111">
+              <edge COLOR="#990000" WIDTH="4"/>
+              <node TEXT="mean value" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;mean value&#10;" ID="ID_31" COLOR="#111111">
+                <edge COLOR="#990000" WIDTH="4"/>
+              </node>
+              <node TEXT="by region" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;by region&#10;" ID="ID_32" COLOR="#111111">
+                <edge COLOR="#990000" WIDTH="4"/>
+              </node>
+              <node TEXT="by installer" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;by installer&#10;" ID="ID_33" COLOR="#111111">
+                <edge COLOR="#990000" WIDTH="4"/>
+              </node>
+            </node>
+          </node>
+          <node TEXT="population 36perc" ORIGTEXT="&#9;&#9;&#9;population 36perc&#10;" ID="ID_34" COLOR="#111111">
+            <edge COLOR="#990000" WIDTH="1"/>
+            <node TEXT="figure out population around the well" ORIGTEXT="&#9;&#9;&#9;&#9;figure out population around the well&#10;" ID="ID_35" COLOR="#111111">
+              <edge COLOR="#990000" WIDTH="4"/>
+            </node>
+            <node TEXT="use external source" ORIGTEXT="&#9;&#9;&#9;&#9;use external source&#10;" ID="ID_36" COLOR="#111111">
+              <edge COLOR="#990000" WIDTH="4"/>
+            </node>
+          </node>
+          <node TEXT="zero values on gps_height " ORIGTEXT="&#9;&#9;&#9;zero values on gps_height &#10;" ID="ID_37" COLOR="#111111">
+            <edge COLOR="#990000" WIDTH="1"/>
+            <node TEXT="should treat as missing " ORIGTEXT="&#9;&#9;&#9;&#9;should treat as missing &#10;" ID="ID_38" COLOR="#111111">
+              <edge COLOR="#990000" WIDTH="4"/>
+            </node>
+          </node>
+          <node TEXT="zero values on lat, long" ORIGTEXT="&#9;&#9;&#9;zero values on lat, long&#10;" ID="ID_39" COLOR="#111111">
+            <edge COLOR="#990000" WIDTH="1"/>
+            <node TEXT="should treat as missing " ORIGTEXT="&#9;&#9;&#9;&#9;should treat as missing &#10;" ID="ID_40" COLOR="#111111">
+              <edge COLOR="#990000" WIDTH="4"/>
+            </node>
+          </node>
+        </node>
+        <node TEXT="modeling strategy&#9;&#9;" ORIGTEXT="&#9;&#9;modeling strategy&#9;&#9;&#10;" ID="ID_41" COLOR="#111111">
+          <edge COLOR="#483D8B" WIDTH="2"/>
+          <node TEXT="basin as dummy" ORIGTEXT="&#9;&#9;&#9;basin as dummy&#10;" ID="ID_42" COLOR="#111111">
+            <edge COLOR="#990000" WIDTH="1"/>
+          </node>
+          <node TEXT="source variable indicates dam availability" ORIGTEXT="&#9;&#9;&#9;source variable indicates dam availability&#10;" ID="ID_43" COLOR="#111111">
+            <edge COLOR="#990000" WIDTH="1"/>
+          </node>
+        </node>
+        <node TEXT="tasks" ORIGTEXT="&#9;&#9;tasks&#10;" ID="ID_44" COLOR="#111111">
+          <edge COLOR="#CD5C5C" WIDTH="2"/>
+        </node>
+      </node>
     </node>
-    <node TEXT="TASKS" ORIGTEXT="TASKS&#10;" ID="ID_24" COLOR="#111111">
+    <node TEXT="TASKS" ORIGTEXT="TASKS&#10;" ID="ID_45" COLOR="#111111">
       <edge COLOR="#0033ff" WIDTH="4"/>
-      <node TEXT="milestones" ORIGTEXT="&#9;[_] 9% milestones&#10;" ID="ID_25" COLOR="#000000">
+      <node TEXT="milestones" ORIGTEXT="&#9;[_] 36% milestones&#10;" ID="ID_46" COLOR="#000000">
         <edge COLOR="#990000" WIDTH="3"/>
         <attribute NAME="task" VALUE="milestones"/>
-        <node TEXT="kickoff" ORIGTEXT="&#9;&#9;[X] 100% kickoff&#10;" ID="ID_26" COLOR="#000000">
+        <node TEXT="kickoff" ORIGTEXT="&#9;&#9;[X] 100% kickoff&#10;" ID="ID_47" COLOR="#000000">
           <edge COLOR="#00b439" WIDTH="2"/>
           <attribute NAME="task" VALUE="kickoff"/>
           <attribute NAME="start" VALUE="2016-05-02-15:00"/>
           <attribute NAME="flags" VALUE="ORIGTEXT"/>
           <attribute NAME="extraflags" VALUE="ORIGTEXT(@start(2016-05-02-15:00))"/>
         </node>
-        <node TEXT="topic decided" ORIGTEXT="&#9;&#9;[_] 0% topic decided&#10;" ID="ID_28" COLOR="#000000">
+        <node TEXT="topic decided" ORIGTEXT="&#9;&#9;[X] 100% topic decided&#10;" ID="ID_49" COLOR="#000000">
           <edge COLOR="#6815e1" WIDTH="2"/>
           <attribute NAME="task" VALUE="topic_decided"/>
           <attribute NAME="start" VALUE="2016-05-03-16:00"/>
           <attribute NAME="flags" VALUE="ORIGTEXT"/>
           <attribute NAME="extraflags" VALUE="ORIGTEXT(@start(2016-05-03-16:00))"/>
         </node>
-        <node TEXT="tasks explained / assigned" ORIGTEXT="&#9;&#9;[_] 0% tasks explained / assigned&#10;" ID="ID_30" COLOR="#000000">
+        <node TEXT="tasks explained / assigned" ORIGTEXT="&#9;&#9;[X] 100% tasks explained / assigned&#10;" ID="ID_51" COLOR="#000000">
           <edge COLOR="#483D8B" WIDTH="2"/>
           <attribute NAME="task" VALUE="tasks_explained___assigned"/>
           <attribute NAME="start" VALUE="2016-05-04-16:00"/>
           <attribute NAME="flags" VALUE="ORIGTEXT"/>
           <attribute NAME="extraflags" VALUE="ORIGTEXT(@start(2016-05-04-16:00))"/>
         </node>
-        <node TEXT="workshop-modeling activities (pair?)" ORIGTEXT="&#9;&#9;[_] 0% workshop-modeling activities (pair?)&#10;" ID="ID_32" COLOR="#000000">
+        <node TEXT="workshop-modeling activities (pair?)" ORIGTEXT="&#9;&#9;[X] 100% workshop-modeling activities (pair?)&#10;" ID="ID_53" COLOR="#000000">
           <edge COLOR="#CD5C5C" WIDTH="2"/>
           <attribute NAME="task" VALUE="workshop_modeling_activities__pair"/>
           <attribute NAME="start" VALUE="2016-05-06-16:00"/>
           <attribute NAME="flags" VALUE="ORIGTEXT"/>
           <attribute NAME="extraflags" VALUE="ORIGTEXT(@start(2016-05-06-16:00))"/>
         </node>
-        <node TEXT="workshop-presentation outlines" ORIGTEXT="&#9;&#9;[_] 0% workshop-presentation outlines&#10;" ID="ID_34" COLOR="#000000">
+        <node TEXT="workshop-presentation outlines" ORIGTEXT="&#9;&#9;[_] 0% workshop-presentation outlines&#10;" ID="ID_55" COLOR="#000000">
           <edge COLOR="#1E90FF" WIDTH="2"/>
           <attribute NAME="task" VALUE="workshop_presentation_outlines"/>
           <attribute NAME="start" VALUE="2016-05-09-16:00"/>
           <attribute NAME="flags" VALUE="ORIGTEXT"/>
           <attribute NAME="extraflags" VALUE="ORIGTEXT(@start(2016-05-09-16:00))"/>
         </node>
-        <node TEXT="workshop-modeling results, pres tools" ORIGTEXT="&#9;&#9;[_] 0% workshop-modeling results, pres tools&#10;" ID="ID_36" COLOR="#000000">
+        <node TEXT="workshop-modeling results, pres tools" ORIGTEXT="&#9;&#9;[_] 0% workshop-modeling results, pres tools&#10;" ID="ID_57" COLOR="#000000">
           <edge COLOR="#20B2AA" WIDTH="2"/>
           <attribute NAME="task" VALUE="workshop_modeling_results__pres_tools"/>
-          <attribute NAME="start" VALUE="2016-05-11-16:00"/>
+          <attribute NAME="start" VALUE="2016-05-12-16:00"/>
           <attribute NAME="depends" VALUE="!!WBS.modeling_work.benchmark"/>
           <attribute NAME="flags" VALUE="ORIGTEXT"/>
-          <attribute NAME="extraflags" VALUE="ORIGTEXT(@start(2016-05-11-16:00))"/>
+          <attribute NAME="extraflags" VALUE="ORIGTEXT(@start(2016-05-12-16:00))"/>
           <attribute NAME="flags" VALUE="ORIGTEXT"/>
           <attribute NAME="extraflags" VALUE="ORIGTEXT(@depends(!!WBS.modeling_work.benchmark))"/>
         </node>
-        <node TEXT="workshop-draft ready" ORIGTEXT="&#9;&#9;[_] 0% workshop-draft ready&#10;" ID="ID_39" COLOR="#000000">
+        <node TEXT="workshop-draft ready" ORIGTEXT="&#9;&#9;[_] 0% workshop-draft ready&#10;" ID="ID_60" COLOR="#000000">
           <edge COLOR="#556B2F" WIDTH="2"/>
           <attribute NAME="task" VALUE="workshop_draft_ready"/>
           <attribute NAME="start" VALUE="2016-05-13-16:00"/>
           <attribute NAME="flags" VALUE="ORIGTEXT"/>
           <attribute NAME="extraflags" VALUE="ORIGTEXT(@start(2016-05-13-16:00))"/>
         </node>
-        <node TEXT="workshop-presentation frame ready" ORIGTEXT="&#9;&#9;[_] 0% workshop-presentation frame ready&#10;" ID="ID_41" COLOR="#000000">
+        <node TEXT="workshop-presentation frame ready" ORIGTEXT="&#9;&#9;[_] 0% workshop-presentation frame ready&#10;" ID="ID_62" COLOR="#000000">
           <edge COLOR="#6A5ACD" WIDTH="2"/>
           <attribute NAME="task" VALUE="workshop_presentation_frame_ready"/>
           <attribute NAME="start" VALUE="2016-05-16-16:00"/>
@@ -140,21 +203,21 @@
           <attribute NAME="flags" VALUE="ORIGTEXT"/>
           <attribute NAME="extraflags" VALUE="ORIGTEXT(@depends(!!WBS.modeling_work.immodel))"/>
         </node>
-        <node TEXT="workshop-presentation almost ready" ORIGTEXT="&#9;&#9;[_] 0% workshop-presentation almost ready&#10;" ID="ID_44" COLOR="#000000">
+        <node TEXT="workshop-presentation almost ready" ORIGTEXT="&#9;&#9;[_] 0% workshop-presentation almost ready&#10;" ID="ID_65" COLOR="#000000">
           <edge COLOR="#00CED1" WIDTH="2"/>
           <attribute NAME="task" VALUE="workshop_presentation_almost_ready"/>
           <attribute NAME="start" VALUE="2016-05-18-16:00"/>
           <attribute NAME="flags" VALUE="ORIGTEXT"/>
           <attribute NAME="extraflags" VALUE="ORIGTEXT(@start(2016-05-18-16:00))"/>
         </node>
-        <node TEXT="workshop-touch up" ORIGTEXT="&#9;&#9;[_] 0% workshop-touch up&#10;" ID="ID_46" COLOR="#000000">
+        <node TEXT="workshop-touch up" ORIGTEXT="&#9;&#9;[_] 0% workshop-touch up&#10;" ID="ID_67" COLOR="#000000">
           <edge COLOR="#006400" WIDTH="2"/>
           <attribute NAME="task" VALUE="workshop_touch_up"/>
           <attribute NAME="start" VALUE="2016-05-18-16:00"/>
           <attribute NAME="flags" VALUE="ORIGTEXT"/>
           <attribute NAME="extraflags" VALUE="ORIGTEXT(@start(2016-05-18-16:00))"/>
         </node>
-        <node TEXT="deliver results/ presentation" ORIGTEXT="&#9;&#9;[_] 0% deliver results/ presentation&#10;" ID="ID_48" COLOR="#000000">
+        <node TEXT="deliver results/ presentation" ORIGTEXT="&#9;&#9;[_] 0% deliver results/ presentation&#10;" ID="ID_69" COLOR="#000000">
           <edge COLOR="#40E0D0" WIDTH="2"/>
           <attribute NAME="task" VALUE="deliver_results__presentation"/>
           <attribute NAME="maxend" VALUE="2016-05-20-12:00"/>
@@ -165,48 +228,57 @@
           <attribute NAME="extraflags" VALUE="ORIGTEXT(@depends(!!WBS))"/>
         </node>
       </node>
-      <node TEXT="WBS" ORIGTEXT="&#9;[_] 33% WBS&#10;" ID="ID_51" COLOR="#000000">
+      <node TEXT="WBS" ORIGTEXT="&#9;[_] 33% WBS&#10;" ID="ID_72" COLOR="#000000">
         <edge COLOR="#990000" WIDTH="3"/>
         <attribute NAME="task" VALUE="WBS"/>
         <attribute NAME="depends" VALUE="!milestones.kickoff"/>
-        <node TEXT="admin" ORIGTEXT="&#9;&#9;[X] 100% admin&#10;" ID="ID_53" COLOR="#000000">
+        <node TEXT="admin" ORIGTEXT="&#9;&#9;[X] 100% admin&#10;" ID="ID_74" COLOR="#000000">
           <edge COLOR="#6815e1" WIDTH="2"/>
           <attribute NAME="task" VALUE="admin"/>
-          <node TEXT="decide on team name" ORIGTEXT="&#9;&#9;&#9;[X] decide on team name&#10;" ID="ID_54" COLOR="#000000">
+          <node TEXT="decide on team name" ORIGTEXT="&#9;&#9;&#9;[X] decide on team name&#10;" ID="ID_75" COLOR="#000000">
             <edge COLOR="#990000" WIDTH="1"/>
             <attribute NAME="effort" VALUE="2h"/>
             <attribute NAME="allocate" VALUE="jc"/>
             <attribute NAME="task" VALUE="decide_on_team_name"/>
-            <node TEXT="2016-05-03 [16:35:42 -- 16:44:29] -&gt; 0.15 h" ORIGTEXT="&#9;&#9;&#9;&#9;2016-05-03 [16:35:42 -- 16:44:29] -&gt; 0.15 h&#10;" ID="ID_55" COLOR="#111111">
+            <node TEXT="2016-05-03 [16:35:42 -- 16:44:29] -&gt; 0.15 h" ORIGTEXT="&#9;&#9;&#9;&#9;2016-05-03 [16:35:42 -- 16:44:29] -&gt; 0.15 h&#10;" ID="ID_76" COLOR="#111111">
               <edge COLOR="#990000" WIDTH="4"/>
             </node>
             <attribute NAME="actl:effort" VALUE="0.5h"/>
           </node>
-          <node TEXT="register a team" ORIGTEXT="&#9;&#9;&#9;[X] register a team&#10;" ID="ID_56" COLOR="#000000">
+          <node TEXT="register a team" ORIGTEXT="&#9;&#9;&#9;[X] register a team&#10;" ID="ID_77" COLOR="#000000">
             <edge COLOR="#990000" WIDTH="1"/>
             <attribute NAME="effort" VALUE="2h"/>
             <attribute NAME="allocate" VALUE="jc"/>
             <attribute NAME="task" VALUE="register_a_team"/>
-            <node TEXT="2016-05-03 [16:35:42 -- 16:44:29] -&gt; 0.15 h" ORIGTEXT="&#9;&#9;&#9;&#9;2016-05-03 [16:35:42 -- 16:44:29] -&gt; 0.15 h&#10;" ID="ID_57" COLOR="#111111">
+            <node TEXT="2016-05-03 [16:35:42 -- 16:44:29] -&gt; 0.15 h" ORIGTEXT="&#9;&#9;&#9;&#9;2016-05-03 [16:35:42 -- 16:44:29] -&gt; 0.15 h&#10;" ID="ID_78" COLOR="#111111">
               <edge COLOR="#990000" WIDTH="4"/>
             </node>
             <attribute NAME="actl:effort" VALUE="0.5h"/>
           </node>
-          <node TEXT="individual sign up" ORIGTEXT="&#9;&#9;&#9;[X] individual sign up&#10;" ID="ID_58" COLOR="#000000">
+          <node TEXT="individual sign up" ORIGTEXT="&#9;&#9;&#9;[X] individual sign up&#10;" ID="ID_79" COLOR="#000000">
             <edge COLOR="#990000" WIDTH="1"/>
             <attribute NAME="effort" VALUE="2h"/>
             <attribute NAME="allocate" VALUE="jc"/>
             <attribute NAME="task" VALUE="individual_sign_up"/>
-            <node TEXT="2016-05-03 [17:05:42 -- 17:14:29] -&gt; 0.15 h" ORIGTEXT="&#9;&#9;&#9;&#9;2016-05-03 [17:05:42 -- 17:14:29] -&gt; 0.15 h&#10;" ID="ID_59" COLOR="#111111">
+            <node TEXT="2016-05-03 [17:05:42 -- 17:14:29] -&gt; 0.15 h" ORIGTEXT="&#9;&#9;&#9;&#9;2016-05-03 [17:05:42 -- 17:14:29] -&gt; 0.15 h&#10;" ID="ID_80" COLOR="#111111">
               <edge COLOR="#990000" WIDTH="4"/>
             </node>
             <attribute NAME="actl:effort" VALUE="0.5h"/>
           </node>
         </node>
-        <node TEXT="modeling work" ORIGTEXT="&#9;&#9;[_] 0% modeling work&#10;" ID="ID_60" COLOR="#000000">
+        <node TEXT="modeling work" ORIGTEXT="&#9;&#9;[_] 0% modeling work&#10;" ID="ID_81" COLOR="#000000">
           <edge COLOR="#483D8B" WIDTH="2"/>
           <attribute NAME="task" VALUE="modeling_work"/>
-          <node TEXT="one successful running case (very basic)" ORIGTEXT="&#9;&#9;&#9;[_] one successful running case (very basic)&#10;" ID="ID_61" COLOR="#000000">
+          <node TEXT="individual work on DEA, push to github" ORIGTEXT="&#9;&#9;&#9;[_] individual work on DEA, push to github&#10;" ID="ID_82" COLOR="#000000">
+            <edge COLOR="#990000" WIDTH="1"/>
+            <attribute NAME="complete" VALUE="0"/>
+            <attribute NAME="allocate" VALUE="jc"/>
+            <attribute NAME="task" VALUE="individual_work_on_DEA__push_to_github"/>
+            <attribute NAME="effort" VALUE="6h"/>
+            <attribute NAME="flags" VALUE="ORIGTEXT"/>
+            <attribute NAME="extraflags" VALUE="ORIGTEXT(@effort(6h))"/>
+          </node>
+          <node TEXT="one successful running case (very basic)" ORIGTEXT="&#9;&#9;&#9;[_] one successful running case (very basic)&#10;" ID="ID_84" COLOR="#000000">
             <edge COLOR="#990000" WIDTH="1"/>
             <attribute NAME="complete" VALUE="0"/>
             <attribute NAME="allocate" VALUE="jc"/>
@@ -217,7 +289,7 @@
             <attribute NAME="flags" VALUE="ORIGTEXT"/>
             <attribute NAME="extraflags" VALUE="ORIGTEXT(@effort(6h))"/>
           </node>
-          <node TEXT="reach benchmark 0.82" ORIGTEXT="&#9;&#9;&#9;[_] reach benchmark 0.82&#10;" ID="ID_64" COLOR="#000000">
+          <node TEXT="reach benchmark 0.82" ORIGTEXT="&#9;&#9;&#9;[_] reach benchmark 0.82&#10;" ID="ID_87" COLOR="#000000">
             <edge COLOR="#990000" WIDTH="1"/>
             <attribute NAME="complete" VALUE="0"/>
             <attribute NAME="allocate" VALUE="jc"/>
@@ -228,7 +300,7 @@
             <attribute NAME="flags" VALUE="ORIGTEXT"/>
             <attribute NAME="extraflags" VALUE="ORIGTEXT(@task(benchmark))"/>
           </node>
-          <node TEXT="imporoved modeld (&gt; benchmark)" ORIGTEXT="&#9;&#9;&#9;[_] imporoved modeld (&gt; benchmark)&#10;" ID="ID_67" COLOR="#000000">
+          <node TEXT="imporoved modeld (&gt; benchmark)" ORIGTEXT="&#9;&#9;&#9;[_] imporoved modeld (&gt; benchmark)&#10;" ID="ID_90" COLOR="#000000">
             <edge COLOR="#990000" WIDTH="1"/>
             <attribute NAME="complete" VALUE="0"/>
             <attribute NAME="allocate" VALUE="jc"/>
@@ -240,30 +312,30 @@
             <attribute NAME="extraflags" VALUE="ORIGTEXT(@task(immodel))"/>
           </node>
         </node>
-        <node TEXT="focused elements" ORIGTEXT="&#9;&#9;[_] % focused elements&#10;" ID="ID_70" COLOR="#000000">
+        <node TEXT="focused elements" ORIGTEXT="&#9;&#9;[_] % focused elements&#10;" ID="ID_93" COLOR="#000000">
           <edge COLOR="#CD5C5C" WIDTH="2"/>
           <attribute NAME="task" VALUE="focused_elements"/>
-          <node TEXT="vis work" ORIGTEXT="&#9;&#9;&#9;[_] % vis work&#10;" ID="ID_71" COLOR="#000000">
+          <node TEXT="vis work" ORIGTEXT="&#9;&#9;&#9;[_] % vis work&#10;" ID="ID_94" COLOR="#000000">
             <edge COLOR="#990000" WIDTH="1"/>
             <attribute NAME="task" VALUE="vis_work"/>
-            <node TEXT="tool exploration (tableau plotly...etc.)" ORIGTEXT="&#9;&#9;&#9;&#9;[_] tool exploration (tableau plotly...etc.)&#10;" ID="ID_72" COLOR="#000000">
+            <node TEXT="tool exploration (tableau plotly...etc.)" ORIGTEXT="&#9;&#9;&#9;&#9;[_] tool exploration (tableau plotly...etc.)&#10;" ID="ID_95" COLOR="#000000">
               <edge COLOR="#990000" WIDTH="4"/>
               <attribute NAME="complete" VALUE="0"/>
               <attribute NAME="effort" VALUE="2h"/>
               <attribute NAME="allocate" VALUE="jc"/>
               <attribute NAME="task" VALUE="tool_exploration__tableau_plotly___etc"/>
             </node>
-            <node TEXT="mapping well locations" ORIGTEXT="&#9;&#9;&#9;&#9;[_] % mapping well locations&#10;" ID="ID_73" COLOR="#000000">
+            <node TEXT="mapping well locations" ORIGTEXT="&#9;&#9;&#9;&#9;[_] % mapping well locations&#10;" ID="ID_96" COLOR="#000000">
               <edge COLOR="#990000" WIDTH="4"/>
               <attribute NAME="task" VALUE="mapping_well_locations"/>
-              <node TEXT="data points" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] data points&#10;" ID="ID_74" COLOR="#000000">
+              <node TEXT="data points" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] data points&#10;" ID="ID_97" COLOR="#000000">
                 <edge COLOR="#990000" WIDTH="4"/>
                 <attribute NAME="complete" VALUE="0"/>
                 <attribute NAME="effort" VALUE="2h"/>
                 <attribute NAME="allocate" VALUE="jc"/>
                 <attribute NAME="task" VALUE="data_points"/>
               </node>
-              <node TEXT="overlap with map" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] overlap with map&#10;" ID="ID_75" COLOR="#000000">
+              <node TEXT="overlap with map" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] overlap with map&#10;" ID="ID_98" COLOR="#000000">
                 <edge COLOR="#990000" WIDTH="4"/>
                 <attribute NAME="complete" VALUE="0"/>
                 <attribute NAME="effort" VALUE="2h"/>
@@ -272,17 +344,17 @@
               </node>
             </node>
           </node>
-          <node TEXT="interpretation of data" ORIGTEXT="&#9;&#9;&#9;[_] % interpretation of data&#10;" ID="ID_76" COLOR="#000000">
+          <node TEXT="interpretation of data" ORIGTEXT="&#9;&#9;&#9;[_] % interpretation of data&#10;" ID="ID_99" COLOR="#000000">
             <edge COLOR="#990000" WIDTH="1"/>
             <attribute NAME="task" VALUE="interpretation_of_data"/>
-            <node TEXT="best combination (company)" ORIGTEXT="&#9;&#9;&#9;&#9;[_] best combination (company)&#10;" ID="ID_77" COLOR="#000000">
+            <node TEXT="best combination (company)" ORIGTEXT="&#9;&#9;&#9;&#9;[_] best combination (company)&#10;" ID="ID_100" COLOR="#000000">
               <edge COLOR="#990000" WIDTH="4"/>
               <attribute NAME="complete" VALUE="0"/>
               <attribute NAME="effort" VALUE="2h"/>
               <attribute NAME="allocate" VALUE="jc"/>
               <attribute NAME="task" VALUE="best_combination__company"/>
             </node>
-            <node TEXT="need more well" ORIGTEXT="&#9;&#9;&#9;&#9;[_] need more well&#10;" ID="ID_78" COLOR="#000000">
+            <node TEXT="need more well" ORIGTEXT="&#9;&#9;&#9;&#9;[_] need more well&#10;" ID="ID_101" COLOR="#000000">
               <edge COLOR="#990000" WIDTH="4"/>
               <attribute NAME="complete" VALUE="0"/>
               <attribute NAME="effort" VALUE="2h"/>
@@ -291,11 +363,11 @@
             </node>
           </node>
         </node>
-        <node TEXT="presentation" ORIGTEXT="&#9;&#9;[_] 0% presentation&#10;" ID="ID_79" COLOR="#000000">
+        <node TEXT="presentation" ORIGTEXT="&#9;&#9;[_] 0% presentation&#10;" ID="ID_102" COLOR="#000000">
           <edge COLOR="#1E90FF" WIDTH="2"/>
           <attribute NAME="task" VALUE="presentation"/>
           <attribute NAME="depends" VALUE="!!milestones.workshop_presentation_outlines"/>
-          <node TEXT="outline" ORIGTEXT="&#9;&#9;&#9;[_] outline&#10;" ID="ID_82" COLOR="#000000">
+          <node TEXT="outline" ORIGTEXT="&#9;&#9;&#9;[_] outline&#10;" ID="ID_105" COLOR="#000000">
             <edge COLOR="#990000" WIDTH="1"/>
             <attribute NAME="complete" VALUE="0"/>
             <attribute NAME="allocate" VALUE="jc"/>
@@ -304,7 +376,7 @@
             <attribute NAME="flags" VALUE="ORIGTEXT"/>
             <attribute NAME="extraflags" VALUE="ORIGTEXT(@effort(2h))"/>
           </node>
-          <node TEXT="touch-up" ORIGTEXT="&#9;&#9;&#9;[_] touch-up&#10;" ID="ID_84" COLOR="#000000">
+          <node TEXT="touch-up" ORIGTEXT="&#9;&#9;&#9;[_] touch-up&#10;" ID="ID_107" COLOR="#000000">
             <edge COLOR="#990000" WIDTH="1"/>
             <attribute NAME="complete" VALUE="0"/>
             <attribute NAME="allocate" VALUE="jc"/>
