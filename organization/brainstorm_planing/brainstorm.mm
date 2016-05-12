@@ -318,45 +318,59 @@
             <node TEXT="data manipulation / imputation" ORIGTEXT="&#9;&#9;&#9;&#9;[_] % data manipulation / imputation&#10;" ID="ID_95" COLOR="#000000">
               <edge COLOR="#990000" WIDTH="4"/>
               <attribute NAME="task" VALUE="data_manipulation___imputation"/>
-              <node TEXT="drop lon, lat, and polulation... etc." ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] drop lon, lat, and polulation... etc.&#10;" ID="ID_96" COLOR="#000000">
+              <node TEXT="drop nan in training data" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] drop nan in training data&#10;" ID="ID_96" COLOR="#000000">
+                <edge COLOR="#990000" WIDTH="4"/>
+                <attribute NAME="complete" VALUE="0"/>
+                <attribute NAME="effort" VALUE="1h"/>
+                <attribute NAME="allocate" VALUE="jc"/>
+                <attribute NAME="task" VALUE="drop_nan_in_training_data"/>
+              </node>
+              <node TEXT="create a flag_missing column" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] create a flag_missing column&#10;" ID="ID_97" COLOR="#000000">
+                <edge COLOR="#990000" WIDTH="4"/>
+                <attribute NAME="complete" VALUE="0"/>
+                <attribute NAME="effort" VALUE="1h"/>
+                <attribute NAME="allocate" VALUE="jc"/>
+                <attribute NAME="task" VALUE="create_a_flag_missing_column"/>
+              </node>
+              <node TEXT="drop lon, lat, and polulation... etc." ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] drop lon, lat, and polulation... etc.&#10;" ID="ID_98" COLOR="#000000">
                 <edge COLOR="#990000" WIDTH="4"/>
                 <attribute NAME="complete" VALUE="0"/>
                 <attribute NAME="effort" VALUE="1h"/>
                 <attribute NAME="allocate" VALUE="jc"/>
                 <attribute NAME="task" VALUE="drop_lon__lat__and_polulation____etc"/>
               </node>
-              <node TEXT="drop outliers?" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] drop outliers?&#10;" ID="ID_97" COLOR="#000000">
+              <node TEXT="drop outliers?" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] drop outliers?&#10;" ID="ID_99" COLOR="#000000">
                 <edge COLOR="#990000" WIDTH="4"/>
                 <attribute NAME="complete" VALUE="0"/>
                 <attribute NAME="effort" VALUE="1h"/>
                 <attribute NAME="allocate" VALUE="jc"/>
                 <attribute NAME="task" VALUE="drop_outliers"/>
               </node>
-              <node TEXT="use ash's imputation strategy" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] % use ash's imputation strategy&#10;" ID="ID_98" COLOR="#000000">
+              <node TEXT="use ash's imputation strategy" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] % use ash's imputation strategy&#10;" ID="ID_100" COLOR="#000000">
                 <edge COLOR="#990000" WIDTH="4"/>
                 <attribute NAME="task" VALUE="use_ash_s_imputation_strategy"/>
-                <node TEXT="population" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;&#9;[_] population&#10;" ID="ID_99" COLOR="#000000">
+                <node TEXT="population" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;&#9;[_] population&#10;" ID="ID_101" COLOR="#000000">
                   <edge COLOR="#990000" WIDTH="4"/>
                   <attribute NAME="complete" VALUE="0"/>
                   <attribute NAME="effort" VALUE="1h"/>
                   <attribute NAME="allocate" VALUE="jc"/>
                   <attribute NAME="task" VALUE="population"/>
                 </node>
-                <node TEXT="gps_height" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;&#9;[_] gps_height&#10;" ID="ID_100" COLOR="#000000">
+                <node TEXT="gps_height" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;&#9;[_] gps_height&#10;" ID="ID_102" COLOR="#000000">
                   <edge COLOR="#990000" WIDTH="4"/>
                   <attribute NAME="complete" VALUE="0"/>
                   <attribute NAME="effort" VALUE="1h"/>
                   <attribute NAME="allocate" VALUE="jc"/>
                   <attribute NAME="task" VALUE="gps_height"/>
                 </node>
-                <node TEXT="lon, lat (should impute perfectly)" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;&#9;[_] lon, lat (should impute perfectly)&#10;" ID="ID_101" COLOR="#000000">
+                <node TEXT="lon, lat (should impute perfectly)" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;&#9;[_] lon, lat (should impute perfectly)&#10;" ID="ID_103" COLOR="#000000">
                   <edge COLOR="#990000" WIDTH="4"/>
                   <attribute NAME="complete" VALUE="0"/>
                   <attribute NAME="effort" VALUE="1h"/>
                   <attribute NAME="allocate" VALUE="jc"/>
                   <attribute NAME="task" VALUE="lon__lat__should_impute_perfectly"/>
                 </node>
-                <node TEXT="construction year" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;&#9;[_] construction year&#10;" ID="ID_102" COLOR="#000000">
+                <node TEXT="construction year" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;&#9;[_] construction year&#10;" ID="ID_104" COLOR="#000000">
                   <edge COLOR="#990000" WIDTH="4"/>
                   <attribute NAME="complete" VALUE="0"/>
                   <attribute NAME="effort" VALUE="1h"/>
@@ -364,14 +378,14 @@
                   <attribute NAME="task" VALUE="construction_year"/>
                 </node>
               </node>
-              <node TEXT="need imputation function (like a dic) to pass to test data" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] need imputation function (like a dic) to pass to test data&#10;" ID="ID_103" COLOR="#000000">
+              <node TEXT="need imputation function (like a dic) to pass to test data" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] need imputation function (like a dic) to pass to test data&#10;" ID="ID_105" COLOR="#000000">
                 <edge COLOR="#990000" WIDTH="4"/>
                 <attribute NAME="complete" VALUE="0"/>
                 <attribute NAME="effort" VALUE="1h"/>
                 <attribute NAME="allocate" VALUE="jc"/>
                 <attribute NAME="task" VALUE="need_imputation_function__like_a_dic__to_pass_to_test_data"/>
               </node>
-              <node TEXT="external data source" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] external data source&#10;" ID="ID_104" COLOR="#000000">
+              <node TEXT="external data source" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] external data source&#10;" ID="ID_106" COLOR="#000000">
                 <edge COLOR="#990000" WIDTH="4"/>
                 <attribute NAME="complete" VALUE="0"/>
                 <attribute NAME="effort" VALUE="1h"/>
@@ -379,24 +393,31 @@
                 <attribute NAME="task" VALUE="external_data_source"/>
               </node>
             </node>
-            <node TEXT="feature selection" ORIGTEXT="&#9;&#9;&#9;&#9;[_] % feature selection &#10;" ID="ID_105" COLOR="#000000">
+            <node TEXT="feature selection" ORIGTEXT="&#9;&#9;&#9;&#9;[_] % feature selection &#10;" ID="ID_107" COLOR="#000000">
               <edge COLOR="#990000" WIDTH="4"/>
               <attribute NAME="task" VALUE="feature_selection"/>
-              <node TEXT="dummy all our categoricals" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] dummy all our categoricals&#10;" ID="ID_106" COLOR="#000000">
+              <node TEXT="dummy all our categoricals" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] dummy all our categoricals&#10;" ID="ID_108" COLOR="#000000">
                 <edge COLOR="#990000" WIDTH="4"/>
                 <attribute NAME="complete" VALUE="0"/>
                 <attribute NAME="effort" VALUE="1h"/>
                 <attribute NAME="allocate" VALUE="jc"/>
                 <attribute NAME="task" VALUE="dummy_all_our_categoricals"/>
               </node>
-              <node TEXT="find out interactions of the dummies" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] find out interactions of the dummies&#10;" ID="ID_107" COLOR="#000000">
+              <node TEXT="manually get coefficient (positively or negatively correlated)" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] manually get coefficient (positively or negatively correlated)&#10;" ID="ID_109" COLOR="#000000">
+                <edge COLOR="#990000" WIDTH="4"/>
+                <attribute NAME="complete" VALUE="0"/>
+                <attribute NAME="effort" VALUE="1h"/>
+                <attribute NAME="allocate" VALUE="jc"/>
+                <attribute NAME="task" VALUE="manually_get_coefficient__positively_or_negatively_correlated"/>
+              </node>
+              <node TEXT="find out interactions of the dummies" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] find out interactions of the dummies&#10;" ID="ID_110" COLOR="#000000">
                 <edge COLOR="#990000" WIDTH="4"/>
                 <attribute NAME="complete" VALUE="0"/>
                 <attribute NAME="effort" VALUE="1h"/>
                 <attribute NAME="allocate" VALUE="jc"/>
                 <attribute NAME="task" VALUE="find_out_interactions_of_the_dummies"/>
               </node>
-              <node TEXT="try to find multicollinearity" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] try to find multicollinearity&#10;" ID="ID_108" COLOR="#000000">
+              <node TEXT="try to find multicollinearity" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] try to find multicollinearity&#10;" ID="ID_111" COLOR="#000000">
                 <edge COLOR="#990000" WIDTH="4"/>
                 <attribute NAME="complete" VALUE="0"/>
                 <attribute NAME="effort" VALUE="1h"/>
@@ -404,7 +425,7 @@
                 <attribute NAME="task" VALUE="try_to_find_multicollinearity"/>
               </node>
             </node>
-            <node TEXT="GLM" ORIGTEXT="&#9;&#9;&#9;&#9;[_] GLM&#10;" ID="ID_109" COLOR="#000000">
+            <node TEXT="GLM" ORIGTEXT="&#9;&#9;&#9;&#9;[_] GLM&#10;" ID="ID_112" COLOR="#000000">
               <edge COLOR="#990000" WIDTH="4"/>
               <attribute NAME="complete" VALUE="0"/>
               <attribute NAME="allocate" VALUE="jc"/>
@@ -416,42 +437,45 @@
             <attribute NAME="flags" VALUE="ORIGTEXT"/>
             <attribute NAME="extraflags" VALUE="ORIGTEXT(@task(benchmark))"/>
           </node>
-          <node TEXT="imporoved model (&gt; benchmark)" ORIGTEXT="&#9;&#9;&#9;[_] imporoved model (&gt; benchmark)&#10;" ID="ID_111" COLOR="#000000">
+          <node TEXT="imporoved model (&gt; benchmark)" ORIGTEXT="&#9;&#9;&#9;[_] imporoved model (&gt; benchmark)&#10;" ID="ID_114" COLOR="#000000">
             <edge COLOR="#990000" WIDTH="1"/>
             <attribute NAME="complete" VALUE="0"/>
             <attribute NAME="allocate" VALUE="jc"/>
+            <attribute NAME="depends" VALUE="!benchmark"/>
             <attribute NAME="effort" VALUE="6h"/>
             <attribute NAME="task" VALUE="immodel"/>
+            <attribute NAME="flags" VALUE="ORIGTEXT"/>
+            <attribute NAME="extraflags" VALUE="ORIGTEXT(@depends(!benchmark))"/>
             <attribute NAME="flags" VALUE="ORIGTEXT"/>
             <attribute NAME="extraflags" VALUE="ORIGTEXT(@effort(6h))"/>
             <attribute NAME="flags" VALUE="ORIGTEXT"/>
             <attribute NAME="extraflags" VALUE="ORIGTEXT(@task(immodel))"/>
           </node>
         </node>
-        <node TEXT="focused elements" ORIGTEXT="&#9;&#9;[_] 0% focused elements&#10;" ID="ID_114" COLOR="#000000">
+        <node TEXT="focused elements" ORIGTEXT="&#9;&#9;[_] 0% focused elements&#10;" ID="ID_118" COLOR="#000000">
           <edge COLOR="#CD5C5C" WIDTH="2"/>
           <attribute NAME="task" VALUE="focused_elements"/>
-          <node TEXT="vis work" ORIGTEXT="&#9;&#9;&#9;[_] % vis work&#10;" ID="ID_115" COLOR="#000000">
+          <node TEXT="vis work" ORIGTEXT="&#9;&#9;&#9;[_] % vis work&#10;" ID="ID_119" COLOR="#000000">
             <edge COLOR="#990000" WIDTH="1"/>
             <attribute NAME="task" VALUE="vis_work"/>
-            <node TEXT="tool exploration (tableau plotly...etc.)" ORIGTEXT="&#9;&#9;&#9;&#9;[_] tool exploration (tableau plotly...etc.)&#10;" ID="ID_116" COLOR="#000000">
+            <node TEXT="tool exploration (tableau plotly...etc.)" ORIGTEXT="&#9;&#9;&#9;&#9;[_] tool exploration (tableau plotly...etc.)&#10;" ID="ID_120" COLOR="#000000">
               <edge COLOR="#990000" WIDTH="4"/>
               <attribute NAME="complete" VALUE="0"/>
               <attribute NAME="effort" VALUE="1h"/>
               <attribute NAME="allocate" VALUE="jc"/>
               <attribute NAME="task" VALUE="tool_exploration__tableau_plotly___etc"/>
             </node>
-            <node TEXT="mapping well locations" ORIGTEXT="&#9;&#9;&#9;&#9;[_] % mapping well locations&#10;" ID="ID_117" COLOR="#000000">
+            <node TEXT="mapping well locations" ORIGTEXT="&#9;&#9;&#9;&#9;[_] % mapping well locations&#10;" ID="ID_121" COLOR="#000000">
               <edge COLOR="#990000" WIDTH="4"/>
               <attribute NAME="task" VALUE="mapping_well_locations"/>
-              <node TEXT="data points" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] data points&#10;" ID="ID_118" COLOR="#000000">
+              <node TEXT="data points" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] data points&#10;" ID="ID_122" COLOR="#000000">
                 <edge COLOR="#990000" WIDTH="4"/>
                 <attribute NAME="complete" VALUE="0"/>
                 <attribute NAME="effort" VALUE="1h"/>
                 <attribute NAME="allocate" VALUE="jc"/>
                 <attribute NAME="task" VALUE="data_points"/>
               </node>
-              <node TEXT="overlap with map" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] overlap with map&#10;" ID="ID_119" COLOR="#000000">
+              <node TEXT="overlap with map" ORIGTEXT="&#9;&#9;&#9;&#9;&#9;[_] overlap with map&#10;" ID="ID_123" COLOR="#000000">
                 <edge COLOR="#990000" WIDTH="4"/>
                 <attribute NAME="complete" VALUE="0"/>
                 <attribute NAME="effort" VALUE="1h"/>
@@ -460,17 +484,17 @@
               </node>
             </node>
           </node>
-          <node TEXT="interpretation of data" ORIGTEXT="&#9;&#9;&#9;[_] % interpretation of data&#10;" ID="ID_120" COLOR="#000000">
+          <node TEXT="interpretation of data" ORIGTEXT="&#9;&#9;&#9;[_] % interpretation of data&#10;" ID="ID_124" COLOR="#000000">
             <edge COLOR="#990000" WIDTH="1"/>
             <attribute NAME="task" VALUE="interpretation_of_data"/>
-            <node TEXT="best combination (company)" ORIGTEXT="&#9;&#9;&#9;&#9;[_] best combination (company)&#10;" ID="ID_121" COLOR="#000000">
+            <node TEXT="best combination (company)" ORIGTEXT="&#9;&#9;&#9;&#9;[_] best combination (company)&#10;" ID="ID_125" COLOR="#000000">
               <edge COLOR="#990000" WIDTH="4"/>
               <attribute NAME="complete" VALUE="0"/>
               <attribute NAME="effort" VALUE="1h"/>
               <attribute NAME="allocate" VALUE="jc"/>
               <attribute NAME="task" VALUE="best_combination__company"/>
             </node>
-            <node TEXT="need more well" ORIGTEXT="&#9;&#9;&#9;&#9;[_] need more well&#10;" ID="ID_122" COLOR="#000000">
+            <node TEXT="need more well" ORIGTEXT="&#9;&#9;&#9;&#9;[_] need more well&#10;" ID="ID_126" COLOR="#000000">
               <edge COLOR="#990000" WIDTH="4"/>
               <attribute NAME="complete" VALUE="0"/>
               <attribute NAME="effort" VALUE="1h"/>
@@ -479,11 +503,12 @@
             </node>
           </node>
         </node>
-        <node TEXT="presentation" ORIGTEXT="&#9;&#9;[_] 0% presentation&#10;" ID="ID_123" COLOR="#000000">
+        <node TEXT="presentation" ORIGTEXT="&#9;&#9;[_] 0% presentation&#10;" ID="ID_127" COLOR="#000000">
           <edge COLOR="#1E90FF" WIDTH="2"/>
           <attribute NAME="task" VALUE="presentation"/>
           <attribute NAME="depends" VALUE="!!milestones.workshop_presentation_outlines"/>
-          <node TEXT="outline" ORIGTEXT="&#9;&#9;&#9;[_] outline&#10;" ID="ID_126" COLOR="#000000">
+          <attribute NAME="start" VALUE="2016-05-13-16:00"/>
+          <node TEXT="outline" ORIGTEXT="&#9;&#9;&#9;[_] outline&#10;" ID="ID_131" COLOR="#000000">
             <edge COLOR="#990000" WIDTH="1"/>
             <attribute NAME="complete" VALUE="0"/>
             <attribute NAME="allocate" VALUE="jc"/>
@@ -492,7 +517,7 @@
             <attribute NAME="flags" VALUE="ORIGTEXT"/>
             <attribute NAME="extraflags" VALUE="ORIGTEXT(@effort(2h))"/>
           </node>
-          <node TEXT="touch-up" ORIGTEXT="&#9;&#9;&#9;[_] touch-up&#10;" ID="ID_128" COLOR="#000000">
+          <node TEXT="touch-up" ORIGTEXT="&#9;&#9;&#9;[_] touch-up&#10;" ID="ID_133" COLOR="#000000">
             <edge COLOR="#990000" WIDTH="1"/>
             <attribute NAME="complete" VALUE="0"/>
             <attribute NAME="allocate" VALUE="jc"/>
@@ -507,6 +532,8 @@
           </node>
           <attribute NAME="flags" VALUE="ORIGTEXT"/>
           <attribute NAME="extraflags" VALUE="ORIGTEXT(@depends(!!milestones.workshop_presentation_outlines))"/>
+          <attribute NAME="flags" VALUE="ORIGTEXT"/>
+          <attribute NAME="extraflags" VALUE="ORIGTEXT(@start(2016-05-13-16:00))"/>
           <attribute NAME="flags" VALUE="ORIGTEXT"/>
           <attribute NAME="extraflags" VALUE="ORIGTEXT(@seq)"/>
           <attribute NAME="flags" VALUE="seq"/>

@@ -94,6 +94,8 @@ TASKS
 			[_] % reach benchmark 0.82 or surpass
 				@task(benchmark)
 				[_] % data manipulation / imputation
+					[_] drop nan in training data
+					[_] create a flag_missing column
 					[_] drop lon, lat, and polulation... etc.
 					[_] drop outliers?
 					[_] % use ash's imputation strategy
@@ -105,11 +107,13 @@ TASKS
 					[_] external data source
 				[_] % feature selection 
 					[_] dummy all our categoricals
+					[_] manually get coefficient (positively or negatively correlated)
 					[_] find out interactions of the dummies
 					[_] try to find multicollinearity
 				[_] GLM
 					@effort(2h)
 			[_] imporoved model (> benchmark)
+				@depends(!benchmark)
 				@effort(6h)
 				@task(immodel)
 		[_] 0% focused elements
@@ -123,6 +127,7 @@ TASKS
 				[_] need more well
 		[_] 0% presentation
 			@depends(!!milestones.workshop_presentation_outlines)
+			@start(2016-05-13-16:00)
 			@seq
 			[_] outline
 				@effort(2h)

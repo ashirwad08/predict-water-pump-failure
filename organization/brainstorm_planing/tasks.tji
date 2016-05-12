@@ -120,6 +120,20 @@ flags  seq ,  ORIGTEXT
 				flags ORIGTEXT
 				task data_manipulation___imputation
 "data manipulation / imputation" {
+					task drop_nan_in_training_data
+"drop nan in training data" {
+						complete 0
+						effort 1h
+						allocate jc
+}
+
+					task create_a_flag_missing_column
+"create a flag_missing column" {
+						complete 0
+						effort 1h
+						allocate jc
+}
+
 					task drop_lon__lat__and_polulation____etc
 "drop lon, lat, and polulation... etc." {
 						complete 0
@@ -189,6 +203,13 @@ flags  seq ,  ORIGTEXT
 						allocate jc
 }
 
+					task manually_get_coefficient__positively_or_negatively_correlated
+"manually get coefficient (positively or negatively correlated)" {
+						complete 0
+						effort 1h
+						allocate jc
+}
+
 					task find_out_interactions_of_the_dummies
 "find out interactions of the dummies" {
 						complete 0
@@ -217,7 +238,9 @@ flags  seq ,  ORIGTEXT
 "imporoved model (> benchmark)" {
 				complete 0
 				allocate jc
+				depends !benchmark
 				effort 6h
+				flags ORIGTEXT
 				flags ORIGTEXT
 				flags ORIGTEXT
 }
@@ -273,6 +296,8 @@ flags  seq ,  ORIGTEXT
 		task presentation
 "presentation" {
 			depends !!milestones.workshop_presentation_outlines
+			start 2016-05-13-16:00
+			flags ORIGTEXT
 			flags ORIGTEXT
 			flags ORIGTEXT
 			flags seq
