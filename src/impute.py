@@ -6,11 +6,16 @@ import numpy as np
 #import re
 #import trainetime
 import pickle
+#from collections import OrderedDict
 #import sklearn
 
-def imputeTrain(train):
+def imputeTrain(trn):
 
-  """Function takes in a trainaset for the "water pump failure" driventraina.org competition 
+  """
+  Input: Training dataset
+  Output: Returns copy of imputed training set; and a reference map (nested dictionary)
+  
+  Function takes in a trainaset for the "water pump failure" driventraina.org competition 
   and returns a list of two items:
   1. A training dataframe that contains imputed columns, namely:
       - gps_height
@@ -27,6 +32,8 @@ def imputeTrain(train):
      each variable above, by a heirarchical geography. The intent is to use this nested
      dictionary to inform unseen test observations during prediction.
   """
+  
+  train = trn.copy()
   
   imputeCols = ['gps_height','population','latitude','longitude','construction_year', 'subvillage','ward','lga','region_code']
   
@@ -149,12 +156,107 @@ def generateMap(geog, col, train, imputeMap):
   grpdf.drop(geog, inplace=True, axis=1)
   
   #insert into nested dict
-  imputeMap[col][geog].update(grpdf)
+  imputeMap[col][geog].update(grpdf.iloc[:,0].to_dict())
   
   return imputeMap
   
-  
-  
-  
 
+
+
+
+
+def fillTest(tst, imputeMap):
+  """
+  Inputs: Test dataframe, reference map nested dictionary
+  Outputs: Copy of Test dataframe with filled in trained values.
   
+  uses a passed in reference map that contains trained means by geographical
+  nearness for numerics 
+      - gps_height
+      - population
+      - latitude
+      - longitude
+      - construction_year. 
+      
+      Function returns the passed in test dataframe with any missing values filled 
+      in according to the reference map.
+   
+   *Note: if input dataframe is sorted in any order the order will be lost as 
+   missing values are removed, filled in, and appended back to the dataframe. 
+   Simply re-sort if original order is desired.
+  """
+   
+  test=tst.copy()
+  
+  imputeCols = ['gps_height','population','latitude','longitude','construction_year', 'subvillage','ward','lga','region_code']
+  
+  exception = 'Missing Columns! Please make sure all of the following columns are in your test frame: \n'+str(imputeCols)
+  numCols = ['gps_height','population','latitude','longitude','construction_year']
+   
+  if not set(imputeCols) < set(list(test.columns)):
+   raise Exception(exception)
+
+  geogHierarch = np.array(['subvillage','ward','lga','region_code'])
+
+  #replace continuous predictor missing values (0s) with NaN
+  test.population.replace({0:np.nan}, inplace=True)   
+  test.gps_height.replace({0:np.nan}, inplace=True)
+  test['construction_year']=test['construction_year'].astype('int64')
+  test.loc[test.construction_year==0,['construction_year']]=np.nan
+
+  #replace lat/long outliers with NaN; replace in plce won't work for multiple columns
+  test.loc[((test.longitude==0)&(test.latitude==-2.000000e-08)),['latitude','longitude']]=test.loc[((test.longitude==0)&(test.latitude==-2.000000e-08)),['latitude','longitude']].replace({'latitude':{-2.000000e-08:np.nan}, 'longitude':{0.0:np.nan}}, regex=False)
+
+
+
+  for col in numCols:
+    if test[col].isnull().sum():
+      #subset ad remove from test frame col specific nulls (will append filled values later)
+      test_sub = test[test[col].isnull()]
+      test = test[~test[col].isnull()]
+      
+      #fill in missing values by tiered geography
+      test_filled = test_sub[~test_sub[col].isnull()] #empty at first
+      for geog in geogHierarch:
+        #get col and geog specific reference map
+        refdf = extractMap(imputeMap, col, geog)
+        
+        #now merge col and geog missing values in test with ref map
+        test_sub=pd.merge(test_sub, refdf, how='left', on=geog)
+        test_sub[col+'_x']=test_sub[col+'_y']
+        test_sub.drop(col+'_y', axis=1, inplace=True)
+        test_sub=test_sub.rename(columns={col+'_x':col}) #remove _x
+        
+        #get all non NaNs from test_sub
+        test_filled = pd.concat([test_filled,test_sub[~test_sub[col].isnull()]], axis=0)
+        test_sub = test_sub[test_sub[col].isnull()]
+        
+        if test_sub.shape[0]==0:
+          break
+        
+      #merge filled set and any remaining (could not fill) back to Test
+      test = pd.concat([test, test_filled, test_sub], axis=0, ignore_index=True)
+  
+  
+  #make sure construction year is an integer col    
+  test['construction_year']=test['construction_year'].astype('int64')
+    
+  return test
+
+
+
+
+
+def extractMap(imap, col, geog):
+  """
+  Extract impute column and geography specific values from trained reference map.
+  Returns a reference dataframe, with columns col, geog.
+  """
+  
+  #extract col and geog specific values from reference map as dataframe
+  mapdf = pd.DataFrame()
+  mapdf = mapdf.from_dict(imap[col][geog],orient='index') 
+  mapdf[geog]=mapdf.index
+  mapdf.columns=[col,geog]
+  
+  return mapdf
