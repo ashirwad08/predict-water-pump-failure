@@ -73,6 +73,20 @@ def ready_for_model(df, flag_interactions=False):
 
     """
 
+    import collections
+    
+    # Keep the most common entries for some features
+    # for now just include scheme_name since it seems to be particularly important
+    N = 20
+    #feat_list = ['funder','installer','scheme_name']
+    feat_list = ['scheme_name']
+
+    for feat in feat_list:
+        least_common = [x[0] for x in collections.Counter(df[feat]).most_common()[N:-1]]
+        for label in least_common:
+            df[feat].replace(label,'NaN',inplace=True)
+
+
     # keep columns
     cols_keep = []
     cols_giveup = []
