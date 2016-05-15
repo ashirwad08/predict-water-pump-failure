@@ -8,7 +8,7 @@ project simple "Tasks List" "1.0" 2016-05-01 +3m {
   # now 2015-02-18-10:00
   # dailyworkinghours 8
   currency "EUR"
-  workinghours mon - fri 15:30 - 18:00
+  workinghours mon - fri 14:30 - 20:00
   scenario plan "Plan" {
     scenario actl "Actual"
   }
@@ -24,6 +24,27 @@ include "tasks.tji"
 include "report_projs.tji"
 include "recurrent.tasks.tji"
 include "supplement.tji"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -22,26 +22,53 @@ Meeting
 		2. map
 			functional and non-functional are abundant
 			need repairs seem to fall in between
+	ws2016-05-06-data exploration-discussion
+		organizational
+			for project purpose, we will use also external information
+			we are not sure we can use the same for the competition and thus will include a swith
+		Data clean-up
+			construction year 34perc
+				imputation strategy
+					mean value
+					by region
+					by installer
+					geographical data
+			population 36perc
+				imputation strategy
+				figure out population around the well
+				use external source
+			zero values on gps_height 
+				should treat as missing 
+			zero values on lat, long
+				should treat as missing 
+			systematic way to check collinearity
+				@tony
+		modeling strategy		
+			dummy
+				basin as dummy
+				source variable indicates dam availability
+			feature selection
+				[_] drop lon, lat	
+				[_] use ash's imputed data
+			GLM
 TASKS
-	[_] 9% milestones
+	[_] 36% milestones
 		[X] 100% kickoff
 			@start(2016-05-02-15:00)
-		[_] 0% topic decided
+		[X] 100% topic decided
 			@start(2016-05-03-16:00)
-		[_] 0% tasks explained / assigned
+		[X] 100% tasks explained / assigned
 			@start(2016-05-04-16:00)
-		[_] 0% workshop-modeling activities (pair?)
+		[X] 100% workshop-modeling activities (pair?)
 			@start(2016-05-06-16:00)
 		[_] 0% workshop-presentation outlines
 			@start(2016-05-09-16:00)
 		[_] 0% workshop-modeling results, pres tools
-			@start(2016-05-11-16:00)
-			@depends(!!WBS.modeling_work.benchmark)
+			@start(2016-05-14-16:00)
 		[_] 0% workshop-draft ready
-			@start(2016-05-13-16:00)
+			@start(2016-05-14-16:00)
 		[_] 0% workshop-presentation frame ready
 			@start(2016-05-16-16:00)
-			@depends(!!WBS.modeling_work.immodel)
 		[_] 0% workshop-presentation almost ready
 			@start(2016-05-18-16:00)
 		[_] 0% workshop-touch up
@@ -49,7 +76,7 @@ TASKS
 		[_] 0% deliver results/ presentation
 			@maxend(2016-05-20-12:00)
 			@depends(!!WBS)
-	[_] 33% WBS
+	[_] 37% WBS
 		@depends(!milestones.kickoff)
 		[X] 100% admin
 			[X] decide on team name
@@ -58,17 +85,38 @@ TASKS
 				2016-05-03 [16:35:42 -- 16:44:29] -> 0.15 h
 			[X] individual sign up
 				2016-05-03 [17:05:42 -- 17:14:29] -> 0.15 h
-		[_] 0% modeling work
-			[_] one successful running case (very basic)
+		[_] 50% modeling work
+			[X] individual work on DEA, push to github
+				@effort(6h)
+			[X] one successful running case (very basic)
 				@task(onesuccess)
 				@effort(6h)
-			[_] reach benchmark 0.82
-				@effort(6h)
+			[_] % reach benchmark 0.82 or surpass
 				@task(benchmark)
-			[_] imporoved modeld (> benchmark)
+				[_] % data manipulation / imputation
+					[_] drop nan in training data
+					[_] create a flag_missing column
+					[_] drop lon, lat, and polulation... etc.
+					[_] drop outliers?
+					[_] % use ash's imputation strategy
+						[_] population
+						[_] gps_height
+						[_] lon, lat (should impute perfectly)
+						[_] construction year
+					[_] need imputation function (like a dic) to pass to test data
+					[_] external data source
+				[_] % feature selection 
+					[_] dummy all our categoricals
+					[_] manually get coefficient (positively or negatively correlated)
+					[_] find out interactions of the dummies
+					[_] try to find multicollinearity
+				[_] GLM
+					@effort(2h)
+			[_] imporoved model (> benchmark)
+				@depends(!benchmark)
 				@effort(6h)
 				@task(immodel)
-		[_] % focused elements
+		[_] 0% focused elements
 			[_] % vis work
 				[_] tool exploration (tableau plotly...etc.)
 				[_] % mapping well locations
@@ -79,6 +127,7 @@ TASKS
 				[_] need more well
 		[_] 0% presentation
 			@depends(!!milestones.workshop_presentation_outlines)
+			@start(2016-05-13-16:00)
 			@seq
 			[_] outline
 				@effort(2h)

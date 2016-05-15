@@ -16,7 +16,7 @@ Team __Hans'nFranz__ gonna "pump... [the water] up!":
 
 ---  
 
-# Building Model 1 - M.V.P. 
+# Baseline Model 1 - M.V.P. 
 See "APPENDIX - Data Discovery Notes" for reasoning. 
 
 ```python
@@ -24,7 +24,52 @@ status_group ~ C(construction_decade) + C(quantity) + population +
     gps_height + C(basin) + C(district_codes) + C(scheme_management) +
     C(extraction_type_group) + C(water_quality) + C(quantity) +
     C(water_quality*source?) + C(extraction_type_group * waterpoint_type?) 
-```
+```  
+
+# Exploratory Findings  
+
+
+## Key Predictors  
+On an initial pass, and without an impute strategy for missing values (of which there are quite a few) we see the following relationships between numerics, discretes, and time type predictors that offer some clues as to their candidacy in the initial baseline model.  
+  
+  
+### Numeric Predictors  
+There are 3 purely numeric predictors (not factoring in location variables). There are quite a few missing values amongst our numerics: Specifically,  
+
+Numeric Variable | % Missing Values 
+-----------------|------------------
+ *amount_tsh     | 70               
+ *num_private    | 98.7             
+ *population     | 36                 
+   
+
+We impute the population with the mean of its neighboring regions (subvillages, ward, lga, region_code).  We see that population informs pump health slightly (or perhaps it's reverse causal): as population goes up (values get sparse beyond a 1000 so it's hard to tell) "non functional" and "functional needs repair" class distribution go up somewhat.  
+
+![Population Distribution by Pump Health](./figures/kdeplot_population_distribution.png)  
+
+* Choosing not to investigate *amount_tsh* for right now.  Too many missing values. 
+* *num_private* has extremely sparse values; there is no description and it's difficult to impute without more domain knowledge. Choosing to exclude from his model.  
+
+#### Datetime Predictors  
+
+We're dealing with 2 potential predictors here: *recorded_date* and *construction_year*. Construction year seems to be a healthy predictor of pump health status. The graph below shows, not surprisingly, that older pumps breakdown a lot more than the newer ones. There is also the '0' group which grouped missing construction year.  Pumps needing repair are more or less evenly spread out by age of pump. This facts suggest either that newer pumps breakdown less, or that maintenance is better lately, or both.  
+
+![Construction Year Distribution by Pump Health](./figures/barchart_stacked_class_proportions_construction_year.png)
+
+
+
+#### Location Based Predictors  
+
+*gps_height* has about 34.4 % readings equal to 0. It is unlikely that these are true readings since wells are very rarely at exactly sea level. We choose to apply the same impute strategy to *gps_height* as we did for *population* hoping that the mean gps_height in neighboring areas are pretty indicative of missing gps_height values.  
+
+Upon doing so, we observe the gps_height distrbution with respect to the operational status of pumps does vary. In lower altitudes we notice the prevalence of more "non functional" pumps, a prevalence of "functional needs repair" pumps between 500-1500 meters, but slightly more "functional" pumps at higher altitudes.  
+
+![GPS Height Distribution by Pump Health](./figures/kdeplot_gpsheight.png)  
+
+
+Plotting the *latitude* against *longitude* while segmenting by the operational status of the pump gives us an intuitive locational layout of the operational status across Tanzania.  
+
+![Pump Operational Status on Tanzanian Lat/Long](./figures/scatter_latlong1.png)
 
 ## Data Cleaning Steps
 * __Skip__ over/undersampling to account for under-represented "functional needs repair" class.  Probably don't need this.     
@@ -55,7 +100,9 @@ status_group ~ C(construction_decade) + C(quantity) + population +
 [iPython Notebook with investigations](./data_discovery.ipynb)
 
 ## Data Discovery
-Overall, 59,400 Observations and 41 Features. Attempt to predict the operational status of water pumps in [Tanzania](https://en.wikipedia.org/wiki/Tanzania).  
+Overall, 59,400 Observations and 41 Features. Attempt to predict the operational status of water pumps in [Tanzania](https://en.wikipedia.org/wiki/Tanzania).    
+
+
 
 ### Outcome Variable 
 
@@ -64,7 +111,9 @@ Overall, 59,400 Observations and 41 Features. Attempt to predict the operational
 * functional (~55%)   
 * non functional (~37%)   
 * functional needs repair (~7% imbalanced!)    
-    * need oversampling/undersampling strategy   
+    * need oversampling/undersampling strategy    
+
+![Outcome class status_group proportions in dataset](./figures/barchart_outcome_class_proportions.png)  
 
 ### Temporal Variables
 * _date_recorded_: The date the row was entered
