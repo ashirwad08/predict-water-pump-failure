@@ -219,19 +219,26 @@ class PumpModel(object):
 
         return df_X
 
-    def split_n_fit(self, model, X=None, y=None):
-        """ given model, X, y, print score of the fit on test """
+    def impute_df_train(self, df_X_train, impute_funct):
+        self.df_X_train, self.impute_map =  impute_func(df_X_train)
+        return self.df_X_train, self.imipute_map
 
-        if X is None or not X.any():
-            X = self.X
-        if y is None or not y.any():
-            y = self.y
-        if X is None or y is None:
-            raise Exception('Need to run reday_for_model first')
+    def split_n_fit(self, model, df_X=None, df_y=None, impute_func=None):
+        """ given model, df_X, df_y, print score of the fit on test """
 
-        X_train, X_test, y_train, y_test = train_test_split(X, y.ravel(),
+        if df_X is None or df_X.empty:
+            df_X = self.df_X
+        if df_y is None or df_y.empty:
+            df_y = self.df_y
+        if df_X is None or df_y is None:
+            raise Exception('Need to run ready_for_model first')
+
+        X_train, X_test, y_train, y_test = train_test_split(df_X, df_y,
                                                             random_state=42)
-        model.fit(X_train, y_train)
+        if impute_func:
+            X_train = self.impute_df_train(X_train)
+
+        model.fit(X_train, y_train.values.ravel())
         print()
         print('{}'.format(model).split('(')[0])
         print(model.score(X_test, y_test))
@@ -240,37 +247,44 @@ class PumpModel(object):
         self.model_fitted = model
         self.show_confusion_matrix()
 
-    def run_models(self, X=None, y=None):
-        if X is None or not X.any():
-            X = self.X
-        if y is None or not y.any():
-            y = self.y
-        if X is None or y is None:
+    def run_models(self, df_X=None, df_y=None,
+                   models=[LogisticRegression(), DecisionTreeClassifier(),
+                           KNeighborsClassifier(), GaussianNB(),
+                           RandomForestClassifier()]):
+        """ run split_n_fit through severl models, default:
+                [LogisticRegression(), DecisionTreeClassifier(),
+                           KNeighborsClassifier(), GaussianNB(),
+                           RandomForestClassifier()]
+            pre-run required: PumpModel.ready_for_model
+        """
+
+        if df_X is None or df_X.empty:
+            df_X = self.df_X
+        if df_y is None or df_y.empty:
+            df_y = self.df_y
+        if df_X is None or df_y is None:
             raise Exception('Need to run reday_for_model first')
 
-        for model in [LogisticRegression(), DecisionTreeClassifier(),
-                      KNeighborsClassifier(), GaussianNB(),
-                      RandomForestClassifier()]:
-            self.split_n_fit(model, X, y)
+        for model in models:
+            self.split_n_fit(model, df_X, df_y)
 
-    def run_KFold(self, model, X=None, y=None, n_folds=5):
+    def run_KFold(self, model, df_X=None, df_y=None, n_folds=5):
         """ given model, X, y, print score of the fit on KFold test"""
-        if X is None or not X.any():
-            X = self.X
-        if y is None or not y.any():
-            y = self.y
-        if X is None or y is None:
+        if df_X is None or df_X.empty:
+            df_X = self.df_X
+        if df_y is None or df_y.empty:
+            df_y = self.df_y
+        if df_X is None or df_y is None:
             raise Exception('Need to run reday_for_model first')
 
-        y = y.ravel()
         scores = []
         cnt = 0
-        for train_index, test_index in KFold(len(y), n_folds=n_folds):
-            X_train = X[train_index]
-            y_train = y[train_index]
-            X_test = X[test_index]
-            y_test = y[test_index]
-            model.fit(X_train, y_train)
+        for train_index, test_index in KFold(len(df_y), n_folds=n_folds):
+            X_train = df_X.iloc[train_index, :]
+            y_train = df_y.iloc[train_index, :]
+            X_test = df_X.iloc[test_index, :]
+            y_test = df_y.iloc[test_index, :]
+            model.fit(X_train, y_train.values.ravel())
             score = model.score(X_test, y_test)
             scores.append(score)
             cnt += 1
@@ -344,16 +358,29 @@ class PumpModel(object):
         print("precision TP / (TP + FP)", precision)
 
 
+# <codecell>
 def main():
-
+    print('run batch data manipulations and test on models')
+# <codecell>
     pm = PumpModel()
 
+# <codecell>
     # first batch
     pm.run_batch()
 
-    # second batch with
+# <codecell>
+    # second batch with clean_features
     pm.run_batch(flag_interactions=False, flag_clean_features=True)
 
+# <codecell>
+    # 3rd batch with feature interactions
+    pm.run_batch(flag_interactions=True, flag_clean_features=False)
 
+# <codecell>
+    # 4th batch with feature interactions and clean_features
+    pm.run_batch(flag_interactions=True, flag_clean_features=True)
+
+# <codecell>
 if __name__ == "__main__":
     main()
+# <codecell>
