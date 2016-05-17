@@ -6,6 +6,7 @@
 # Pump it up! Modeling work
 
 # <codecell>
+
 from __future__ import print_function
 
 import pandas as pd
@@ -27,17 +28,17 @@ import patsy
 import numpy as np
 import matplotlib.pyplot as plt
 from impute import imputeTrain
-# %matplotlib inline
+%matplotlib inline
 
 # TODO: make impute_func work, need workaround on the dataframe splitting
 
 # <codecell>
 
-
 class PumpModel(object):
     def __init__(self,
                  csv_train_X='../data/train_X.csv',
-                 csv_train_y='../data/train_y.csv'):
+                 csv_train_y='../data/train_y.csv',
+                 csv_test_X='../data/test.csv'):
         """
         input:
             csv_train_X - file location
@@ -45,6 +46,7 @@ class PumpModel(object):
         """
         self.csv_train_X = csv_train_X
         self.csv_train_y = csv_train_y
+        self.csv_test_X = csv_test_X
         self.df = self.read_n_convert_functional_labels()
         print('PumpModel obj. initialzed. data read into df. \n'
               'PumpModel.run_batch() to see quick analysis results.')
@@ -88,7 +90,10 @@ class PumpModel(object):
         """
 
         df_X = pd.read_csv(self.csv_train_X)
+        df_X = df_X.fillna('Other')
         df_y = pd.read_csv(self.csv_train_y)
+        self.df_X_realtest = pd.read_csv(self.csv_test_X)
+        self.df_X_realtest = self.df_X_realtest.fillna('Other')
         df = pd.merge(df_y, df_X, how='left', on='id')
         df.loc[:, 'status'] = df.status_group
         df.loc[df.status.str.startswith('functional needs'), 'status'] = 1
@@ -96,6 +101,10 @@ class PumpModel(object):
         df.loc[~df.status.str.startswith('functional').isnull(), 'status'] = 2
         df.status = df.status.astype(int)
         return df
+
+    def process_test_cols(self):
+        for c in self.cols_categorical:
+            self.df_X_realtest[c].apply(lambda x: 'Ohter' if x not in self.df[c].unique())
 
     def ready_for_model(self,
                         flag_interactions=False,
@@ -115,6 +124,7 @@ class PumpModel(object):
             self.cols_giveup
             self.df_X
             self.df_y
+            self.df_X_test
             self.X
             self.y
             self.cols_X
@@ -149,6 +159,10 @@ class PumpModel(object):
                                                data=self.df,
                                                return_type='dataframe')
 
+        self.df_X_realtest['status'] = 0
+        self.df_y_realtest, self.df_X_realtest = patsy.dmatrices(self.r_formula,
+                                               data=self.df_X_realtest,
+                                               return_type='dataframe')
         # include interactions of features if flagged
         if flag_interactions:
             self.df_X = self.interactions(self.df_X)
@@ -169,7 +183,7 @@ class PumpModel(object):
             least_common = [x[0] for x in collections.Counter(self.df[feat]).
                             most_common()[N:-1]]
             for label in least_common:
-                self.df.loc[:, feat] = self.df[feat].replace(label, 'NaN')
+                self.df.loc[:, feat] = self.df[feat].replace(label, 'Other').fillna('Other')
         return self.df
 
     def preprocess_features(self, N=25):
@@ -199,6 +213,17 @@ class PumpModel(object):
                     self.cols_giveup.append(c)
         return (self.cols_continuous, self.cols_categorical, self.cols_giveup)
 
+    def impute_df_train(self, df_X_train, impute_funct):
+        self.df_X_train, self.impute_map =  impute_func(df_X_train)
+        return self.df_X_train, self.imipute_map
+
+    def split_df(self, df, impute_funct=None):
+        self.df_train, self.df_test = train_test_split(df, random_state=42)
+        if impute_func:
+            self.df_train, self.df_test = self.impute_df_train(self.df_train,
+                                                               impute_funct)
+        return self.df_train, self.df_test
+
     def interactions(self, df_X):
         """ input: df_X including the transposed dummy columns
             return: df_X with feature interactions
@@ -219,26 +244,25 @@ class PumpModel(object):
 
         return df_X
 
-    def impute_df_train(self, df_X_train, impute_funct):
-        self.df_X_train, self.impute_map =  impute_func(df_X_train)
-        return self.df_X_train, self.imipute_map
+    def fit(self, model):
+        X = self.X
+        y = self.y
+        model.fit(X, y)
+        self.model_fitted = model
 
-    def split_n_fit(self, model, df_X=None, df_y=None, impute_func=None):
-        """ given model, df_X, df_y, print score of the fit on test """
+    def split_n_fit(self, model, X=None, y=None):
+        """ given model, X, y, print score of the fit on test """
 
-        if df_X is None or df_X.empty:
-            df_X = self.df_X
-        if df_y is None or df_y.empty:
-            df_y = self.df_y
-        if df_X is None or df_y is None:
-            raise Exception('Need to run ready_for_model first')
+        if X is None or not X.any():
+            X = self.X
+        if y is None or not y.any():
+            y = self.y
+        if X is None or y is None:
+            raise Exception('Need to run reday_for_model first')
 
-        X_train, X_test, y_train, y_test = train_test_split(df_X, df_y,
+        X_train, X_test, y_train, y_test = train_test_split(X, y.ravel(),
                                                             random_state=42)
-        if impute_func:
-            X_train = self.impute_df_train(X_train)
-
-        model.fit(X_train, y_train.values.ravel())
+        model.fit(X_train, y_train)
         print()
         print('{}'.format(model).split('(')[0])
         print(model.score(X_test, y_test))
@@ -247,44 +271,37 @@ class PumpModel(object):
         self.model_fitted = model
         self.show_confusion_matrix()
 
-    def run_models(self, df_X=None, df_y=None,
-                   models=[LogisticRegression(), DecisionTreeClassifier(),
-                           KNeighborsClassifier(), GaussianNB(),
-                           RandomForestClassifier()]):
-        """ run split_n_fit through severl models, default:
-                [LogisticRegression(), DecisionTreeClassifier(),
-                           KNeighborsClassifier(), GaussianNB(),
-                           RandomForestClassifier()]
-            pre-run required: PumpModel.ready_for_model
-        """
-
-        if df_X is None or df_X.empty:
-            df_X = self.df_X
-        if df_y is None or df_y.empty:
-            df_y = self.df_y
-        if df_X is None or df_y is None:
+    def run_models(self, X=None, y=None):
+        if X is None or not X.any():
+            X = self.X
+        if y is None or not y.any():
+            y = self.y
+        if X is None or y is None:
             raise Exception('Need to run reday_for_model first')
 
-        for model in models:
-            self.split_n_fit(model, df_X, df_y)
+        for model in [LogisticRegression(), DecisionTreeClassifier(),
+                      KNeighborsClassifier(), GaussianNB(),
+                      RandomForestClassifier()]:
+            self.split_n_fit(model, X, y)
 
-    def run_KFold(self, model, df_X=None, df_y=None, n_folds=5):
+    def run_KFold(self, model, X=None, y=None, n_folds=5):
         """ given model, X, y, print score of the fit on KFold test"""
-        if df_X is None or df_X.empty:
-            df_X = self.df_X
-        if df_y is None or df_y.empty:
-            df_y = self.df_y
-        if df_X is None or df_y is None:
+        if X is None or not X.any():
+            X = self.X
+        if y is None or not y.any():
+            y = self.y
+        if X is None or y is None:
             raise Exception('Need to run reday_for_model first')
 
+        y = y.ravel()
         scores = []
         cnt = 0
-        for train_index, test_index in KFold(len(df_y), n_folds=n_folds):
-            X_train = df_X.iloc[train_index, :]
-            y_train = df_y.iloc[train_index, :]
-            X_test = df_X.iloc[test_index, :]
-            y_test = df_y.iloc[test_index, :]
-            model.fit(X_train, y_train.values.ravel())
+        for train_index, test_index in KFold(len(y), n_folds=n_folds):
+            X_train = X[train_index]
+            y_train = y[train_index]
+            X_test = X[test_index]
+            y_test = y[test_index]
+            model.fit(X_train, y_train)
             score = model.score(X_test, y_test)
             scores.append(score)
             cnt += 1
@@ -357,30 +374,91 @@ class PumpModel(object):
         precision = TP * 1. / (TP + FP)
         print("precision TP / (TP + FP)", precision)
 
-
 # <codecell>
+
+
 def main():
     print('run batch data manipulations and test on models')
-# <codecell>
-    pm = PumpModel()
 
 # <codecell>
+
+    pm = PumpModel()
+    pm.ready_for_model(flag_clean_features=True)
+
+# <codecell>
+
+    model = RandomForestClassifier(n_estimators=200)
+    pm.fit(model)
+
+# <codecell>
+
+    print(pm.df_X_realtest.shape)
+    print(pm.df_X.shape)
+
+# <codecell>
+
+    # pm.read_n_convert_functional_labels()
+    print(pm.df_X.shape)
+    print(pm.X.shape)
+    print(pm.df.shape)
+
+    # y, X = patsy.dmatrices(pm.r_formula, data=pm.df, NA_action='keep')
+
+    pm.df.dropna().shape
+
+
+    pm = PumpModel()
+    model = RandomForestClassifier(n_estimators=200)
+    pm.ready_for_model(flag_interactions=False, flag_clean_features=True)
+    pm.fit(model)
+    model_fitted = pm.model_fitted
+    pm.df_X_realtest
+
+# <codecell>
+
+pm.df_X_realtest.shape
+df_test = pd.read_csv('../data/test.csv')
+df_test.shape
+
+# <codecell>
+
     # first batch
+    pm = PumpModel()
     pm.run_batch()
 
 # <codecell>
-    # second batch with clean_features
-    pm.run_batch(flag_interactions=False, flag_clean_features=True)
+
+pm.df_X_realtest.shape
 
 # <codecell>
+
+    # second batch with clean_features
+    pm = PumpModel()
+    pm.run_batch(flag_interactions=False, flag_clean_features=True)
+
+
+# <codecell>
+
+    pm.df_X.shape
+    pm.df_X_realtest.shape
+
+# <codecell>
+
+model = pm.model_fitted
+model.predict
+
+# <codecell>
+
     # 3rd batch with feature interactions
     pm.run_batch(flag_interactions=True, flag_clean_features=False)
 
 # <codecell>
+
     # 4th batch with feature interactions and clean_features
     pm.run_batch(flag_interactions=True, flag_clean_features=True)
 
 # <codecell>
+
 if __name__ == "__main__":
     main()
-# <codecell>
+
