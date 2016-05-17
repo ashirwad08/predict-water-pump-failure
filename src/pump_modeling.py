@@ -48,6 +48,10 @@ class PumpModel(object):
         self.csv_train_y = csv_train_y
         self.csv_test_X = csv_test_X
         self.df = self.read_n_convert_functional_labels()
+
+        # define mapping of labels<->numeric (ideally this should be a class constant)
+        self.LABELS = ['non functional','functional needs repair','functional']
+
         print('PumpModel obj. initialzed. data read into df. \n'
               'PumpModel.run_batch() to see quick analysis results.')
 
@@ -458,6 +462,57 @@ class PumpModel(object):
         print("recall TP / (TP + FN)", recall)
         precision = TP * 1. / (TP + FP)
         print("precision TP / (TP + FP)", precision)
+
+    def print_test_predictions(self,
+                               output_file='../data/test_predict_y.csv'):
+        """
+        Saves predictions on test set to csv file.
+        
+        input:
+            self
+            output_file - filename to save predictions to
+        """
+
+
+        print("Printing results")
+        # get predictions
+        y_pred = self.model_fitted.predict(self.X_test)
+        # convert prediction numbers to corresponding labels
+        labels = self.LABELS
+        y_pred = [labels[int(x)] for x in y_pred]
+        
+        # get corresponding test ids
+        test_ids = self.ids[self.train_set_len:]
+
+        # zip together ids and results and print
+        results_df = pd.DataFrame(zip(test_ids,y_pred),columns=['id','status_group'])
+        results_df.to_csv(output_file,index_label=False,index=False)
+
+    def gen_test_set(self,
+                     csv_train_X='../data_test/train_X.csv',
+                     csv_train_y='../data_test/train_y.csv',
+                     csv_test_X='../data_test/test.csv',
+                     csv_test_y='../data_test/test_y_dummy.csv'):
+        """
+        Generates random test/training split from current training set and writes to files.
+        input:
+             self
+           filenames to write to
+             csv_train_X='../data_test/train_X.csv',
+             csv_train_y='../data_test/train_y.csv',
+             csv_test_X='../data_test/test.csv',
+             csv_test_y='../data_test/test_y_dummy.csv'):
+        """
+        print("Generating test set")
+        df = self.df
+        df_y = df[['id','status_group']]
+        df_X = df.drop(['status_group'],axis=1)
+        X_train, X_test, y_train, y_test = train_test_split(df_X, df_y)
+
+        X_train.to_csv(csv_train_X,index_label=False,index=False)
+        y_train.to_csv(csv_train_y,index_label=False,index=False)
+        X_test.to_csv(csv_test_X,index_label=False,index=False)
+        y_test.to_csv(csv_test_y,index_label=False,index=False)
 
 
 # <codecell>
