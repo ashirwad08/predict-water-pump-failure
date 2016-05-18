@@ -15,6 +15,7 @@ import collections
 
 # import statsmodels.formula.api as smf
 from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegressionCV
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
@@ -22,6 +23,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.cross_validation import train_test_split
 from sklearn.cross_validation import KFold
 from sklearn.metrics import confusion_matrix
+from sklearn.grid_search import RandomizedSearchCV
+
 
 import patsy
 import numpy as np
@@ -35,15 +38,17 @@ from impute import imputeTrain
 
 
 class PumpModel(object):
+    
     def __init__(self,
-                 csv_train_X='../data/train_X.csv',
-                 csv_train_y='../data/train_y.csv',
-                 csv_test_X='../data/test.csv'):
+                 csv_train_X = '../data/train_X.csv',
+                 csv_train_y = '../data/train_y.csv',
+                 csv_test_X = '../data/test.csv'):
         """
         input:
             csv_train_X - file location
             csv_train_y - file location
         """
+
         self.csv_train_X = csv_train_X
         self.csv_train_y = csv_train_y
         self.csv_test_X = csv_test_X
@@ -56,25 +61,29 @@ class PumpModel(object):
               'PumpModel.run_batch() to see quick analysis results.')
 
     def run_batch(self, flag_interactions=False, flag_clean_features=False):
-
+        """
+        This method run multiple models then RandomForest with
+        200, 300 n_estimators and Kfold with 200 n_estimetors
+        """
         self.flag_interactions = flag_interactions
         self.flag_clean_features = flag_clean_features
 
         print('reading and transforming data...')
         print('split train and test, testing models...')
         self.run_models()
+
         # it looks RandomForest does us better, let's try a new parameter
-        print('\ntrying RandomForestClassifier with n_estimators=200...')
+        print('\nTrying RandomForestClassifier with n_estimators=200...')
         model = RandomForestClassifier(n_estimators=200)
         self.split_n_fit_train(model)
 
         # let's try another new parameter
-        print('\ntrying RandomForestClassifier with n_estimators=300...')
+        print('\nTrying RandomForestClassifier with n_estimators=300...')
         model = RandomForestClassifier(n_estimators=300)
         self.split_n_fit_train(model)
 
         # also use KFold to make sure we cross validate
-        print('\ntrying RandomForestClassifier with n_estimators=200 '
+        print('\nTrying RandomForestClassifier with n_estimators=200 '
               'using KFold...')
         model = RandomForestClassifier(n_estimators=200)
         self.run_KFold(model)
@@ -82,7 +91,7 @@ class PumpModel(object):
         # so far, we only used the automatic feature selection.
         # To get some idea of what feature really matters, we can check
         # the importance of features
-        print('\nsort and barplot features...')
+        print('\nSort and barplot features...')
         self.sort_feature_imporances()
 
     def run_batch_realtest(self,
@@ -90,6 +99,9 @@ class PumpModel(object):
                            flag_interactions=False,
                            flag_clean_features=False,
                            impute_func=None):
+        """
+        This method is simmilar to `run_batch`
+        """
         df = self.df
         if impute_func:
             df, impute_map = self.impute_df_train(self.df, impute_func)
