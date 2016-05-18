@@ -261,12 +261,12 @@ def best_RandomForest(X, y):
     X_train, X_test, y_train, y_test = train_test_split(X, y.ravel(),
                                                         random_state=42)
     
-    clf = ExtraTreesClassifier(max_depth=None,
-                                 bootstrap = False)
+    clf = ExtraTreesClassifier(bootstrap = False)
 
     grid = {'n_estimators': sp_randint(250, 400),
             'min_samples_leaf' : sp_randint(1, 12),
-            'max_features' : sp_randint(5, 50)}
+            'max_features' : sp_randint(5, 50),
+            'max_depth': sp_randint(3,30)}
 
     clf_rfc = RandomizedSearchCV(clf, n_jobs=4, n_iter=10,
                                  param_distributions=grid,
@@ -275,10 +275,14 @@ def best_RandomForest(X, y):
     y_hat = clf_rfc.fit(X_train,
                     y_train.ravel()).predict(X_test)
 
-    print('Best Params: \n', clf_rfc.best_params_ )
+    print('Best Params: \n')
+    for k, v in clf_rfc.best_params_.items():                                            
+        print(k, v)
+
     print("Accuracy with Random Forest = %4.4f"  %
           accuracy_score(y_test.ravel(), y_hat))
     binarize_y_confustion_matrix(y_test.ravel(), y_hat)
+    return(clf_rfc.best_params_)
 
 def best_ExtraTree(X, y):
     from sklearn.grid_search import RandomizedSearchCV
@@ -306,6 +310,7 @@ def best_ExtraTree(X, y):
     print("Accuracy with Extra Forest = %4.4f"  %
           accuracy_score(y_test.ravel(), y_hat))
     binarize_y_confustion_matrix(y_test.ravel(), y_hat)
+    return(clf_rfc.best_params_) 
 
 def best_BoostTree(X, y):
     from sklearn.grid_search import RandomizedSearchCV
@@ -331,8 +336,30 @@ def best_BoostTree(X, y):
           accuracy_score(y_test.ravel(), y_hat))
     binarize_y_confustion_matrix(y_test.ravel(), y_hat)
 
+# <codecell>
 
+def features_opt(X, y, cut=0.90):
+    from sklearn.metrics import metrics
     
+    clf_tree = DecisionTreeClassifier(criterion='entropy',
+            max_depth=40)
+    clf_tree.fit(X, y.ravel())
+
+    importances = clf_tree.feature_importances_
+
+    indices = importances.argsort()[::-1]
+
+    cols_ = list(X.columns)
+    s = 0
+    i = 0
+    cols_main = []
+    while s < cut:
+        s += importances[indices[i]]
+        cols_main.append([cols_[i], importances[indices[i]]])
+        i += 1
+
+    return(cols_main)
+
 # <codecell>
 
 def main():
@@ -361,27 +388,31 @@ def main():
 
     # also use KFold to make sure we cross validate
     print('\ntrying RandomForestClassifier with best param and randomazed search')
-    best_RandomForest(X, y)
+    best = best_RandomForest(X, y)
     print()
     
     # also use KFold to make sure we cross validate
-    print('\ntrying RandomForestClassifier with min_samples_leaf=4, max_features=45, n_estimators= 258 using KFold...')
-    model = RandomForestClassifier(max_depth=None,
+    model = RandomForestClassifier(max_depth=best['max_depth'],
                                    bootstrap = False,
-                                   min_samples_leaf=8,
-                                   max_features=23,
-                                   n_estimators= 333)
+                                   min_samples_leaf=best['min_samples_leaf'],
+                                   max_features=best['max_features'],
+                                   n_estimators= best['n_estimators'])
+    
+    print('\nTrying RandomForestClassifier with')
+    for k, v in best.items():
+        print(k, v)
+    print('using KFold...')
     run_KFold(model, X, y)
     
     # also use KFold to make sure we cross validate
     print('\ntrying ExtraTreeClassifier with best param and randomazed search')
-    best_ExtraTree(X, y)
-    print()
+    #best_ExtraTree(X, y)
+    #print()
    
     # also use KFold to make sure we cross validate
-    print('\ntrying AdaBoostClassifier with best param and randomazed search')
-    best_BoostTree(X, y)
-    print()
+    #print('\ntrying AdaBoostClassifier with best param and randomazed search')
+    #best_BoostTree(X, y)
+    #print()
    
     
 
@@ -389,9 +420,9 @@ def main():
     # so far, we only used the automatic feature selection.
     # To get some idea of what feature really matters, we can check
     # the importance of features
-    print('sort and barplot features...')
-    sort_feature_imporances(model, cols_X)
+    #print('Main features')
 
-{'min_samples_leaf': 4, 'max_features': 45, 'n_estimators': 258}
+    
+
 if __name__ == "__main__":
     main()
