@@ -98,9 +98,10 @@ class PumpModel(object):
             if not fill_test_func:
                 raise Exception('need to input both '
                                 'impute_func and fill_test_func')
-#             df, impute_map = self.impute_df_train(self.df, impute_func)
-#             self.df_X_realtest = fill_test_func(self.df_X_realtest, impute_map)
-#             self.df_X_realtest_imputed = self.df_X_realtest.copy()
+            df, impute_map = self.impute_df_train(self.df, impute_func)
+        else:
+            df = self.df
+            impute_map = None
 
             df, self.df_X_realtest = self.impute_data(df, self.df_X_realtest,
                                                       impute_func,
@@ -492,19 +493,27 @@ class PumpModel(object):
 
         input:
             self
-            output_file - filename to save predictions to
+            y_pred - predicted values for test set (0,1,2)
+            output_file - filename to save predictions to after mapping to proper labels
+
+        Flow for generating submission:
+           pm = PumpModel()
+           [y_pred,impute_map] = pm.run_batch_realtest()
+           pm.print_test_predictions(y_pred)
+
+           # output is in test_predict_y.csv
+
         """
 
 
         print("Printing results")
-        # get predictions
-        # y_pred = self.model_fitted.predict(self.X_test)
+
         # convert prediction numbers to corresponding labels
         labels = self.LABELS
         y_pred = [labels[int(x)] for x in y_pred]
 
         # get corresponding test ids
-        test_ids = self.ids[self.train_set_len:]
+        test_ids = self.realtest_IDs
 
         # zip together ids and results and print
         results_df = pd.DataFrame(zip(test_ids,y_pred),columns=['id','status_group'])
