@@ -93,6 +93,9 @@ class PumpModel(object):
         df = self.df
         if impute_func:
             df, impute_map = self.impute_df_train(self.df, impute_func)
+        else:
+            df = self.df
+            impute_map = None
 
         # get X, y from training set
         (self.X, self.y) = self.ready_for_model_train(
@@ -464,25 +467,34 @@ class PumpModel(object):
         print("precision TP / (TP + FP)", precision)
 
     def print_test_predictions(self,
+                               y_pred,
                                output_file='../data/test_predict_y.csv'):
         """
         Saves predictions on test set to csv file.
-        
+
         input:
             self
-            output_file - filename to save predictions to
+            y_pred - predicted values for test set (0,1,2)
+            output_file - filename to save predictions to after mapping to proper labels
+        
+        Flow for generating submission:
+           pm = PumpModel()
+           [y_pred,impute_map] = pm.run_batch_realtest()
+           pm.print_test_predictions(y_pred)
+
+           # output is in test_predict_y.csv
+
         """
 
 
         print("Printing results")
-        # get predictions
-        y_pred = self.model_fitted.predict(self.X_test)
+
         # convert prediction numbers to corresponding labels
         labels = self.LABELS
         y_pred = [labels[int(x)] for x in y_pred]
         
         # get corresponding test ids
-        test_ids = self.ids[self.train_set_len:]
+        test_ids = self.realtest_IDs
 
         # zip together ids and results and print
         results_df = pd.DataFrame(zip(test_ids,y_pred),columns=['id','status_group'])
