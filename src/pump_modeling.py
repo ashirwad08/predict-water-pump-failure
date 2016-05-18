@@ -26,7 +26,7 @@ from sklearn.metrics import confusion_matrix
 import patsy
 import numpy as np
 import matplotlib.pyplot as plt
-from impute import imputeTrain
+from impute import imputeTrain, fillTest
 # %matplotlib inline
 
 # TODO: make impute_func work, need workaround on the dataframe splitting
@@ -89,20 +89,39 @@ class PumpModel(object):
                            model=RandomForestClassifier(n_estimators=200),
                            flag_interactions=False,
                            flag_clean_features=False,
-                           impute_func=None):
+                           impute_func=None,
+                           fill_test_func=None):
         df = self.df
+        impute_map = None
         if impute_func:
-            df, impute_map = self.impute_df_train(self.df, impute_func)
+            print('imputing data...')
+            if not fill_test_func:
+                raise Exception('need to input both '
+                                'impute_func and fill_test_func')
+#             df, impute_map = self.impute_df_train(self.df, impute_func)
+#             self.df_X_realtest = fill_test_func(self.df_X_realtest, impute_map)
+#             self.df_X_realtest_imputed = self.df_X_realtest.copy()
 
-        # get X, y from training set
+            df, self.df_X_realtest = self.impute_data(df, self.df_X_realtest,
+                                                      impute_func,
+                                                      fill_test_func)
+
+
+        print('get X, y from training set')
         (self.X, self.y) = self.ready_for_model_train(
                             df, flag_interactions=flag_interactions,
                             flag_clean_features=flag_clean_features)
 
+        print('fitting model...')
         model.fit(self.X, self.y)
+
+        print('preparing X, y from test set...')
         X_test, y_test = self.ready_for_model_test(
-            self.df_X_realtest, flag_interactions, impute_map=impute_map)
+            self.df_X_realtest, flag_interactions)
+
+        print('predicting y...')
         self.y_pred_realtest = model.predict(X_test)
+        self.print_test_predictions(self.y_pred_realtest)
         return self.y_pred_realtest, impute_map
 
     def run_models(self, df=pd.DataFrame(),
@@ -240,8 +259,7 @@ class PumpModel(object):
         return (self.X, self.y)
 
     def ready_for_model_test(self, df_test,
-                             flag_interactions=False,
-                             impute_map=None):
+                             flag_interactions=False):
         """
         process test data
 
@@ -263,8 +281,6 @@ class PumpModel(object):
         if 'status' not in df_test.columns:
             df_test.loc[:, 'status'] = 0
 
-        if impute_map:
-            self.df_X_test = impute_map(self.df_X_test)
         self.df_y_test, self.df_X_test = patsy.dmatrices(
                                                self.r_formula,
                                                data=df_test,
@@ -367,15 +383,20 @@ class PumpModel(object):
 
         return df_X
 
-    def impute_df_train(self, df_X_train, impute_func):
-        self.df_X_train, self.impute_map = impute_func(df_X_train)
-        return self.df_X_train, self.imipute_map
+    def impute_data(self, df_train, df_test, impute_func, fill_test_func):
+        df_train, self.impute_map = impute_func(df_train)
+        df_test = fill_test_func(df_test, self.impute_map)
+        return df_train, df_test
 
-    def split_df(self, df, impute_func=None):
+    def split_df(self, df, impute_func=None, fill_test_func=None):
         df_train, df_test = train_test_split(df, random_state=42)
         if impute_func:
-            df_train, self.impute_map = self.impute_df_train(df_train,
-                                                             impute_func)
+            if not fill_test_func:
+                raise Exception('need to input both impute_func'
+                                ' and fill_test_func')
+            df_train, df_test = self.impute_data(df_train, df_test,
+                                                 impute_func,
+                                                 fill_test_func)
         return df_train, df_test
 
     def split_n_fit_train(self, model, df=pd.DataFrame(), impute_func=None):
@@ -464,10 +485,11 @@ class PumpModel(object):
         print("precision TP / (TP + FP)", precision)
 
     def print_test_predictions(self,
+                               y_pred,
                                output_file='../data/test_predict_y.csv'):
         """
         Saves predictions on test set to csv file.
-        
+
         input:
             self
             output_file - filename to save predictions to
@@ -476,11 +498,11 @@ class PumpModel(object):
 
         print("Printing results")
         # get predictions
-        y_pred = self.model_fitted.predict(self.X_test)
+        # y_pred = self.model_fitted.predict(self.X_test)
         # convert prediction numbers to corresponding labels
         labels = self.LABELS
         y_pred = [labels[int(x)] for x in y_pred]
-        
+
         # get corresponding test ids
         test_ids = self.ids[self.train_set_len:]
 
