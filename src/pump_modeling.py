@@ -24,7 +24,9 @@ from sklearn.cross_validation import train_test_split
 from sklearn.cross_validation import KFold
 from sklearn.metrics import confusion_matrix
 from sklearn.grid_search import RandomizedSearchCV
-
+from scipy.stats import randint as sp_randint
+from sklearn.metrics import accuracy_score
+ 
 
 import patsy
 import numpy as np
@@ -537,6 +539,38 @@ class PumpModel(object):
         y_train.to_csv(csv_train_y,index_label=False,index=False)
         X_test.to_csv(csv_test_X,index_label=False,index=False)
         y_test.to_csv(csv_test_y,index_label=False,index=False)
+
+
+
+
+    def best_RandomForest(X, y):
+        
+        X_train, X_test, y_train, y_test = train_test_split(X,
+                y.ravel(), random_state=42)
+ 
+        clf = ExtraTreesClassifier(bootstrap = False)
+ 
+        grid = {'n_estimators': sp_randint(250, 400),
+             'min_samples_leaf' : sp_randint(1, 12),
+             'max_features' : sp_randint(5, 50),
+             'max_depth': sp_randint(3,30)}
+ 
+        clf_rfc = RandomizedSearchCV(clf, n_jobs=4, n_iter=10,
+                                  param_distributions=grid,
+                                  scoring='accuracy')
+ 
+        y_hat = clf_rfc.fit(X_train,
+                     y_train.ravel()).predict(X_test)
+ 
+        print('Best Params: \n')
+        for k, v in clf_rfc.best_params_.items():
+            print(k, v)
+ 
+        print("Accuracy with Random Forest = %4.4f"  %
+            accuracy_score(y_test.ravel(), y_hat))
+        binarize_y_confustion_matrix(y_test.ravel(), y_hat)
+        return(clf_rfc.best_params_)
+ 
 
 
 # <codecell>
