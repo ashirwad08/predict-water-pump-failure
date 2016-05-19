@@ -193,7 +193,7 @@ def fillTest(tst, imputeMap):
   exception = 'Missing Columns! Please make sure all of the following columns are in your test frame: \n'+str(imputeCols)
   numCols = ['gps_height','population','latitude','longitude','construction_year']
    
-  if not set(imputeCols) < set(list(test.columns)):
+  if not set(imputeCols) < set(list(test_imp.columns)):
    raise Exception(exception)
 
   geogHierarch = np.array(['subvillage','ward','lga','region_code'])
