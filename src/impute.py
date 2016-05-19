@@ -52,7 +52,7 @@ def imputeTrain(trn):
   
   
   #replace continuous predictor missing values (0s) with NaN
-  train.population.replace({0:np.nan}, inplace=True)   
+  train.population.replace({0:np.nan,1:np.nan,2:np.nan}, inplace=True)   
   train.gps_height.replace({0:np.nan}, inplace=True)
   train['construction_year']=train['construction_year'].astype('int64')
   train.loc[train.construction_year==0,['construction_year']]=np.nan
@@ -199,7 +199,7 @@ def fillTest(tst, imputeMap):
   geogHierarch = np.array(['subvillage','ward','lga','region_code'])
 
   #replace continuous predictor missing values (0s) with NaN
-  test_imp.population.replace({0:np.nan}, inplace=True)   
+  test_imp.population.replace({0:np.nan, 1:np.nan, 2:np.nan}, inplace=True)   
   test_imp.gps_height.replace({0:np.nan}, inplace=True)
   test_imp['construction_year']=test_imp['construction_year'].astype('int64')
   test_imp.loc[test_imp.construction_year==0,['construction_year']]=np.nan
