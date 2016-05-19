@@ -7,9 +7,42 @@ supplement task WBS.admin.register_a_team {
 supplement task WBS.admin.individual_sign_up {
    actl:booking jc 2016-05-03-18:00:00 +0.5h {overtime 2}
 }
+supplement task WBS.modeling_work.benchmark.data_manipulation___imputation.drop_nan_in_training_data {
+   actl:booking jc 2016-05-17-07:00:00 +1h {overtime 2}
+}
+supplement task WBS.modeling_work.benchmark.data_manipulation___imputation.use_ash_s_imputation_strategy.gps_height {
+   actl:booking jc 2016-05-17-08:00:00 +1h {overtime 2}
+}
+supplement task WBS.modeling_work.benchmark.data_manipulation___imputation.use_ash_s_imputation_strategy.lon__lat__should_impute_perfectly {
+   actl:booking jc 2016-05-17-09:00:00 +1h {overtime 2}
+}
+supplement task WBS.modeling_work.benchmark.data_manipulation___imputation.use_ash_s_imputation_strategy.population {
+   actl:booking jc 2016-05-17-10:00:00 +1h {overtime 2}
+}
+supplement task WBS.modeling_work.benchmark.data_manipulation___imputation.use_ash_s_imputation_strategy.construction_year {
+   actl:booking jc 2016-05-17-11:00:00 +1h {overtime 2}
+}
+supplement task WBS.modeling_work.benchmark.data_manipulation___imputation.need_imputation_function__like_a_dic__to_pass_to_test_data {
+   actl:booking jc 2016-05-17-12:00:00 +1h {overtime 2}
+}
+supplement task WBS.modeling_work.benchmark.data_manipulation___imputation.external_data_source {
+   actl:booking jc 2016-05-17-13:00:00 +1h {overtime 2}
+}
+supplement task WBS.modeling_work.benchmark.feature_selection.dummy_all_our_categoricals {
+   actl:booking jc 2016-05-17-14:00:00 +1h {overtime 2}
+}
+supplement task WBS.modeling_work.benchmark.feature_selection.find_out_interactions_of_the_dummies {
+   actl:booking jc 2016-05-17-15:00:00 +1h {overtime 2}
+}
+supplement task WBS.focused_elements.vis_work.tool_exploration__tableau_plotly___etc {
+   actl:booking jc 2016-05-17-16:00:00 +1h {overtime 2}
+}
+supplement task WBS.presentation.outline {
+   actl:booking jc 2016-05-17-17:00:00 +2h {overtime 2}
+}
 supplement task WBS.modeling_work.onesuccess {
-   actl:booking jc 2016-05-10-07:00:00 +6h {overtime 2}
+   actl:booking jc 2016-05-17-19:00:00 +6h {overtime 2}
 }
 supplement task WBS.modeling_work.individual_work_on_DEA__push_to_github {
-   actl:booking jc 2016-05-10-13:00:00 +6h {overtime 2}
+   actl:booking jc 2016-05-18-01:00:00 +6h {overtime 2}
 }

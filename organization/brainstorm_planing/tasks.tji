@@ -116,13 +116,12 @@ flags  seq ,  ORIGTEXT
 }
 
 			task benchmark
-"reach benchmark 0.82 or surpass" {
+"get in the ranking game" {
 				flags ORIGTEXT
 				task data_manipulation___imputation
 "data manipulation / imputation" {
 					task drop_nan_in_training_data
 "drop nan in training data" {
-						complete 0
 						effort 1h
 						allocate jc
 }
@@ -152,28 +151,24 @@ flags  seq ,  ORIGTEXT
 "use ash's imputation strategy" {
 						task population
 "population" {
-							complete 0
 							effort 1h
 							allocate jc
 }
 
 						task gps_height
 "gps_height" {
-							complete 0
 							effort 1h
 							allocate jc
 }
 
 						task lon__lat__should_impute_perfectly
 "lon, lat (should impute perfectly)" {
-							complete 0
 							effort 1h
 							allocate jc
 }
 
 						task construction_year
 "construction year" {
-							complete 0
 							effort 1h
 							allocate jc
 }
@@ -181,14 +176,12 @@ flags  seq ,  ORIGTEXT
 
 					task need_imputation_function__like_a_dic__to_pass_to_test_data
 "need imputation function (like a dic) to pass to test data" {
-						complete 0
 						effort 1h
 						allocate jc
 }
 
 					task external_data_source
 "external data source" {
-						complete 0
 						effort 1h
 						allocate jc
 }
@@ -198,7 +191,6 @@ flags  seq ,  ORIGTEXT
 "feature selection" {
 					task dummy_all_our_categoricals
 "dummy all our categoricals" {
-						complete 0
 						effort 1h
 						allocate jc
 }
@@ -212,7 +204,6 @@ flags  seq ,  ORIGTEXT
 
 					task find_out_interactions_of_the_dummies
 "find out interactions of the dummies" {
-						complete 0
 						effort 1h
 						allocate jc
 }
@@ -252,7 +243,6 @@ flags  seq ,  ORIGTEXT
 "vis work" {
 				task tool_exploration__tableau_plotly___etc
 "tool exploration (tableau plotly...etc.)" {
-					complete 0
 					effort 1h
 					allocate jc
 }
@@ -291,6 +281,66 @@ flags  seq ,  ORIGTEXT
 					allocate jc
 }
 }
+
+			task web_app
+"web app" {
+				priority 900
+				flags ORIGTEXT
+				task concept
+"concept" {
+					complete 0
+					effort 1h
+					allocate jc
+}
+
+				task framework__flask
+"framework (flask?)" {
+					complete 0
+					effort 1h
+					allocate jc
+}
+
+				task viswork_pieces
+"viswork pieces" {
+					task adjustable_bars
+"adjustable bars" {
+						task will_change_recall___precision_bars
+". will change recall / precision bars" {
+							complete 0
+							effort 1h
+							allocate jc
+}
+
+						task the_threshold_values_will_pass_to_the_circles
+". the threshold values will pass to the circles" {
+							complete 0
+							effort 1h
+							allocate jc
+}
+}
+
+					task percentage_of_well_pumps_that_need_repairing
+"percentage of well pumps that need repairing" {
+						complete 0
+						effort 1h
+						allocate jc
+}
+
+					task circles_that_appear_on_maps_according_to_data
+"circles that appear on maps according to data" {
+						complete 0
+						effort 1h
+						allocate jc
+}
+
+					task linking_appearing_threshold_to_circles__func_prob
+"linking appearing threshold to circles (func_prob)" {
+						complete 0
+						effort 1h
+						allocate jc
+}
+}
+}
 }
 
 		task presentation
@@ -303,7 +353,6 @@ flags  seq ,  ORIGTEXT
 			flags seq
 			task outline
 "outline" {
-				complete 0
 				allocate jc
 				effort 2h
 				flags ORIGTEXT
