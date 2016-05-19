@@ -59,7 +59,8 @@
   </defs>
       </div>
     </div>
-
+    <div>
+      </div>
 
     <!-- Import the libraries: jQuery, d3, d3.slider -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -72,12 +73,15 @@
 
      var current_thresh = .5;
     var current_accuracy = 81;
-    var chart_width = 800
-    var chart_height = 600
-    var border_size = 20
-    var precision = 100.0
-    var recall = 80
+    var chart_width = 800;
+    var chart_height = 600;
+    var border_size = 20;
+    var precision = 100.0;
+    var recall = 80;
 
+    var my_data = {{data_json | safe}};
+
+      
      var chart = d3.select("#bar_chart")
     		   .append("svg:svg")
                    .attr("stroke","black")
@@ -108,29 +112,39 @@
          .style("stroke", "black")     
          .style("stroke-width", 0.25)
 
-    circle_size = [5, 5];
-    circle_lat =  [225, 375];
-    circle_lon = [575, 575];
-    circle_good = [1, 0];
+    //circle_size = [5, 5];
+    //circle_lat =  [225, 375];
+    //circle_lon = [575, 575];
+    //circle_good = [1, 0];
     colors = ["red","green"];
-    
+
+      var lat_scale = d3.scale.linear()
+                             .domain([1,-10 ])
+                             .range([100, 530]);
+
+     var lon_scale = d3.scale.linear()
+                             .domain([30, 40])
+                             .range([300, 700]);
+
+
+    var circle_size = 5; 
     var circles =
-    chart.selectAll("circle").data(circle_size);
-    
-circles.enter().append("circle")
+    chart.selectAll("circle").data(my_data);
+
+    circles.enter().append("circle")
     .attr({
-          cx: function(d,i) {return circle_lat[i];},
-          cy: function(d,i) {return circle_lon[i];},
-          r: function(d) {return d;},
-          fill: function(d,i) {return colors[circle_good[i]];}
+          cx: function(d,i) {return lon_scale(d['longitude']);},
+          cy: function(d,i) {return lat_scale(d['latitude']);},
+          r: function(d) {return circle_size;},
+          fill: function(d,i) {if (d['func'] > thresh) {return colors[1]}
+    else {return colors[0]};}
 });
      var precision_scale = d3.scale.linear()
                                 .domain([0, 100])
                                 .range([0, 400]);
 
-    
      var bar = chart.append("g")
-                    .attr("class", "bar")
+                    .attr("class", "bar");
 
      bar.append("svg:rect")
           .attr("id", "precision_bar")
@@ -193,6 +207,9 @@ circles.enter().append("circle")
 
      <!-- FUNCTION TO GET CHANCE FROM YOUR PREDICTOR WITH AJAX AND CHANGE BAR  HEIGHT -->
      function getAndDrawStats(thresh){
+
+        circles.transition().duration(500)
+               .style({fill: function(d,i) {if (d['func'] > thresh) {return colors[1]}else {return colors[0]};}});
 
       $.ajax({
          type: "POST",

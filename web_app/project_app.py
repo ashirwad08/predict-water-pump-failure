@@ -2,11 +2,15 @@ import flask
 from sklearn.linear_model import LogisticRegression
 import numpy as np
 import pandas as pd
+from flask import Blueprint, request, render_template
 
 #---------- MODEL IN MEMORY ----------------#
 thresh = .5
 
-data = pd.read_csv("data/data_logReg.csv")
+data_log_reg = pd.read_csv("data/data_logReg.csv")
+data_rand_forest = pd.read_csv("data/data_randForest.csv")
+
+data = data_rand_forest
 
 status = data['status']
 pred_func = data['func'].values
@@ -30,8 +34,16 @@ def viz_page():
     """
     Homepage: serve our visualization page, awesome.html
     """
-    with open("awesome.html", 'r') as viz_file:
-        return viz_file.read()
+    data_rand_forest = pd.read_csv("data/data_randForest.csv")
+    data = data_rand_forest
+    table_html = (data.to_html(classes=['u-full-width'], index=False)
+                    .replace('border="1"','border="0"')
+                 )
+    data_json = data.to_json(orient="records")
+    return render_template('awesome.html', data_json=data_json, data_table=table_html)
+
+    #with open("awesome.html", 'r') as viz_file:
+    #    return viz_file.read()
 
 # Get threshold value and return precision/recall (and data points with pumps predicted to need repairs)
 @app.route("/score", methods=["POST"])
