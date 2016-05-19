@@ -24,7 +24,9 @@ from sklearn.cross_validation import train_test_split
 from sklearn.cross_validation import KFold
 from sklearn.metrics import confusion_matrix
 from sklearn.grid_search import RandomizedSearchCV
-
+from scipy.stats import randint as sp_randint
+from sklearn.metrics import accuracy_score
+ 
 
 import patsy
 import numpy as np
@@ -105,9 +107,6 @@ class PumpModel(object):
         df = self.df
         if impute_func:
             df, impute_map = self.impute_df_train(self.df, impute_func)
-        else:
-            df = self.df
-            impute_map = None
 
         # get X, y from training set
         (self.X, self.y) = self.ready_for_model_train(
@@ -479,34 +478,25 @@ class PumpModel(object):
         print("precision TP / (TP + FP)", precision)
 
     def print_test_predictions(self,
-                               y_pred,
                                output_file='../data/test_predict_y.csv'):
         """
         Saves predictions on test set to csv file.
-
+        
         input:
             self
-            y_pred - predicted values for test set (0,1,2)
-            output_file - filename to save predictions to after mapping to proper labels
-        
-        Flow for generating submission:
-           pm = PumpModel()
-           [y_pred,impute_map] = pm.run_batch_realtest()
-           pm.print_test_predictions(y_pred)
-
-           # output is in test_predict_y.csv
-
+            output_file - filename to save predictions to
         """
 
 
         print("Printing results")
-
+        # get predictions
+        y_pred = self.model_fitted.predict(self.X_test)
         # convert prediction numbers to corresponding labels
         labels = self.LABELS
         y_pred = [labels[int(x)] for x in y_pred]
         
         # get corresponding test ids
-        test_ids = self.realtest_IDs
+        test_ids = self.ids[self.train_set_len:]
 
         # zip together ids and results and print
         results_df = pd.DataFrame(zip(test_ids,y_pred),columns=['id','status_group'])
@@ -537,6 +527,38 @@ class PumpModel(object):
         y_train.to_csv(csv_train_y,index_label=False,index=False)
         X_test.to_csv(csv_test_X,index_label=False,index=False)
         y_test.to_csv(csv_test_y,index_label=False,index=False)
+
+
+
+
+    def best_RandomForest(X, y):
+        
+        X_train, X_test, y_train, y_test = train_test_split(X,
+                y.ravel(), random_state=42)
+ 
+        clf = ExtraTreesClassifier(bootstrap = False)
+ 
+        grid = {'n_estimators': sp_randint(250, 400),
+             'min_samples_leaf' : sp_randint(1, 12),
+             'max_features' : sp_randint(5, 50),
+             'max_depth': sp_randint(3,30)}
+ 
+        clf_rfc = RandomizedSearchCV(clf, n_jobs=4, n_iter=10,
+                                  param_distributions=grid,
+                                  scoring='accuracy')
+ 
+        y_hat = clf_rfc.fit(X_train,
+                     y_train.ravel()).predict(X_test)
+ 
+        print('Best Params: \n')
+        for k, v in clf_rfc.best_params_.items():
+            print(k, v)
+ 
+        print("Accuracy with Random Forest = %4.4f"  %
+            accuracy_score(y_test.ravel(), y_hat))
+        binarize_y_confustion_matrix(y_test.ravel(), y_hat)
+        return(clf_rfc.best_params_)
+ 
 
 
 # <codecell>
