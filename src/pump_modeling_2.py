@@ -15,7 +15,6 @@ import collections
 
 # import statsmodels.formula.api as smf
 from sklearn.linear_model import LogisticRegression
-from sklearn.linear_model import LogisticRegressionCV
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
@@ -23,13 +22,11 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.cross_validation import train_test_split
 from sklearn.cross_validation import KFold
 from sklearn.metrics import confusion_matrix
-from sklearn.grid_search import RandomizedSearchCV
-
 
 import patsy
 import numpy as np
 import matplotlib.pyplot as plt
-from impute import imputeTrain
+from impute import imputeTrain, fillTest
 # %matplotlib inline
 
 # TODO: make impute_func work, need workaround on the dataframe splitting
@@ -38,52 +35,63 @@ from impute import imputeTrain
 
 
 class PumpModel(object):
-    
     def __init__(self,
-                 csv_train_X = '../data/train_X.csv',
-                 csv_train_y = '../data/train_y.csv',
-                 csv_test_X = '../data/test.csv'):
+                 csv_train_X='../data/train_X.csv',
+                 csv_train_y='../data/train_y.csv',
+                 csv_test_X='../data/test.csv'):
         """
         input:
             csv_train_X - file location
             csv_train_y - file location
         """
-
         self.csv_train_X = csv_train_X
         self.csv_train_y = csv_train_y
         self.csv_test_X = csv_test_X
+
+        self.impute_func = None
+        self.fill_test_func = None
+        self.flag_interactions = False
+        self.flag_clean_features = False
+
         self.df = self.read_n_convert_functional_labels()
 
-        # define mapping of labels<->numeric (ideally this should be a class constant)
-        self.LABELS = ['non functional','functional needs repair','functional']
+        # define mapping of labels<->numeric
+        # (ideally this should be a class constant)
+        self.LABELS = ['non functional',
+                       'functional needs repair',
+                       'functional']
 
         print('PumpModel obj. initialzed. data read into df. \n'
               'PumpModel.run_batch() to see quick analysis results.')
 
-    def run_batch(self, flag_interactions=False, flag_clean_features=False):
-        """
-        This method run multiple models then RandomForest with
-        200, 300 n_estimators and Kfold with 200 n_estimetors
-        """
+    def run_batch(self,
+                  flag_interactions=False,
+                  flag_clean_features=False,
+                  impute_func=None,
+                  fill_test_func=None):
+
+        if impute_func:
+            self.impute_func = impute_func
+            self.fill_test_func = fill_test_func
+
         self.flag_interactions = flag_interactions
         self.flag_clean_features = flag_clean_features
 
         print('reading and transforming data...')
         print('split train and test, testing models...')
         self.run_models()
-
         # it looks RandomForest does us better, let's try a new parameter
-        print('\nTrying RandomForestClassifier with n_estimators=200...')
+        print('\ntrying RandomForestClassifier with n_estimators=200...')
         model = RandomForestClassifier(n_estimators=200)
         self.split_n_fit_train(model)
 
         # let's try another new parameter
-        print('\nTrying RandomForestClassifier with n_estimators=300...')
+        print('\ntrying RandomForestClassifier with n_estimators=300...')
         model = RandomForestClassifier(n_estimators=300)
         self.split_n_fit_train(model)
 
         # also use KFold to make sure we cross validate
-        print('\nTrying RandomForestClassifier with n_estimators=200 '
+        print('\ntrying RandomForestClassifier with n_estimators=200 '
               'using KFold...')
         model = RandomForestClassifier(n_estimators=200)
         self.run_KFold(model)
@@ -91,31 +99,50 @@ class PumpModel(object):
         # so far, we only used the automatic feature selection.
         # To get some idea of what feature really matters, we can check
         # the importance of features
-        print('\nSort and barplot features...')
+        print('\nsort and barplot features...')
         self.sort_feature_imporances()
 
     def run_batch_realtest(self,
                            model=RandomForestClassifier(n_estimators=200),
                            flag_interactions=False,
                            flag_clean_features=False,
-                           impute_func=None):
-        """
-        This method is simmilar to `run_batch`
+                           impute_func=None,
+                           fill_test_func=None):
+        """ take real test data and generate submission file
+        input:
+            model=RandomForestClassifier(n_estimators=200),
+            flag_interactions=False,
+            flag_clean_features=False,
+            impute_func=None,
+            fill_test_func=None
+
+        return:
+            self.y_pred_realtest
         """
         df = self.df
+        impute_map = None
         if impute_func:
-            df, impute_map = self.impute_df_train(self.df, impute_func)
+            print('imputing data...')
+            df, self.df_X_realtest = self.impute_data(df, self.df_X_realtest,
+                                                      impute_func,
+                                                      fill_test_func)
 
-        # get X, y from training set
+        print('get X, y from training set')
         (self.X, self.y) = self.ready_for_model_train(
                             df, flag_interactions=flag_interactions,
                             flag_clean_features=flag_clean_features)
 
+        print('fitting model...')
         model.fit(self.X, self.y)
+
+        print('preparing X, y from test set...')
         X_test, y_test = self.ready_for_model_test(
-            self.df_X_realtest, flag_interactions, impute_map=impute_map)
+            self.df_X_realtest, flag_interactions)
+
+        print('predicting y...')
         self.y_pred_realtest = model.predict(X_test)
-        return self.y_pred_realtest, impute_map
+        self.print_test_predictions(self.y_pred_realtest)
+        return self.y_pred_realtest
 
     def run_models(self, df=pd.DataFrame(),
                    models=[LogisticRegression(), DecisionTreeClassifier(),
@@ -127,11 +154,12 @@ class PumpModel(object):
                            RandomForestClassifier()]
             pre-run required: PumpModel.ready_for_model
         """
-
         if df.empty:
             df = self.df
+
         for model in models:
-            self.split_n_fit_train(model, df)
+            self.split_n_fit_train(model, df,
+                                   self.impute_func, self.fill_test_func)
 
     def run_KFold(self, model, df_X=None, df_y=None, n_folds=5):
         """ given model, X, y, print score of the fit on KFold test"""
@@ -252,21 +280,22 @@ class PumpModel(object):
         return (self.X, self.y)
 
     def ready_for_model_test(self, df_test,
-                             flag_interactions=False,
-                             impute_map=None):
+                             flag_interactions=False):
         """
-        process test data
+        process test data, matching columns with self.df_X_test
 
         input:
             df_test - test DataFrame
             flag_iteractions - True to add columns of additional feature
                                 interactions
-            flag_clean_features - True to keep most common N categories in
-                                the features with too many of them
 
         create/modify:
             self.df_X_test
             self.df_y_test
+            self.X_test
+            self.y_test
+
+        return:
             self.X_test
             self.y_test
         """
@@ -275,8 +304,6 @@ class PumpModel(object):
         if 'status' not in df_test.columns:
             df_test.loc[:, 'status'] = 0
 
-        if impute_map:
-            self.df_X_test = impute_map(self.df_X_test)
         self.df_y_test, self.df_X_test = patsy.dmatrices(
                                                self.r_formula,
                                                data=df_test,
@@ -291,7 +318,7 @@ class PumpModel(object):
 
         # include interactions of features if flagged
         if flag_interactions:
-            self.df_X = self.interactions(self.df_X)
+            self.df_X_test = self.interactions(self.df_X_test)
 
         self.X_test = self.df_X_test.values
         self.y_test = self.df_y_test.values
@@ -379,24 +406,35 @@ class PumpModel(object):
 
         return df_X
 
-    def impute_df_train(self, df_X_train, impute_func):
-        self.df_X_train, self.impute_map = impute_func(df_X_train)
-        return self.df_X_train, self.imipute_map
+    def impute_data(self, df_train, df_test, impute_func, fill_test_func):
+        if not impute_func or not fill_test_func:
+            raise Exception('need to input both '
+                            'impute_func and fill_test_func')
+        print('imputing data...')
+        self.df_train_imp, self.impute_map = impute_func(df_train)
+        self.df_test_imp = fill_test_func(df_test, self.impute_map)
+        return self.df_train_imp, self.df_test_imp
 
-    def split_df(self, df, impute_func=None):
+    def split_df(self, df, impute_func=None, fill_test_func=None):
         df_train, df_test = train_test_split(df, random_state=42)
         if impute_func:
-            df_train, self.impute_map = self.impute_df_train(df_train,
-                                                             impute_func)
+            df_train, df_test = self.impute_data(df_train, df_test,
+                                                 impute_func,
+                                                 fill_test_func)
         return df_train, df_test
 
-    def split_n_fit_train(self, model, df=pd.DataFrame(), impute_func=None):
+    def split_n_fit_train(self, model, df=pd.DataFrame(),
+                          impute_func=None,
+                          fill_test_func=None):
         """ given model, df_X, df_y, print score of the fit on test """
 
         if df.empty:
             df = self.df
 
-        self.df_train, self.df_test = self.split_df(df)
+        self.df_train, self.df_test = self.split_df(df,
+                                                    impute_func,
+                                                    fill_test_func)
+
         X_train, y_train = self.ready_for_model_train(
                         self.df_train,
                         flag_interactions=self.flag_interactions,
@@ -476,29 +514,39 @@ class PumpModel(object):
         print("precision TP / (TP + FP)", precision)
 
     def print_test_predictions(self,
+                               y_pred,
                                output_file='../data/test_predict_y.csv'):
         """
         Saves predictions on test set to csv file.
-        
+
         input:
             self
-            output_file - filename to save predictions to
+            y_pred - predicted values for test set (0,1,2)
+            output_file - filename to save predictions to after mapping
+                          to proper labels
+
+        Flow for generating submission:
+           pm = PumpModel()
+           [y_pred,impute_map] = pm.run_batch_realtest()
+           pm.print_test_predictions(y_pred)
+
+           # output is in test_predict_y.csv
+
         """
 
-
         print("Printing results")
-        # get predictions
-        y_pred = self.model_fitted.predict(self.X_test)
+
         # convert prediction numbers to corresponding labels
         labels = self.LABELS
         y_pred = [labels[int(x)] for x in y_pred]
-        
+
         # get corresponding test ids
-        test_ids = self.ids[self.train_set_len:]
+        test_ids = self.realtest_IDs
 
         # zip together ids and results and print
-        results_df = pd.DataFrame(zip(test_ids,y_pred),columns=['id','status_group'])
-        results_df.to_csv(output_file,index_label=False,index=False)
+        results_df = pd.DataFrame(zip(test_ids, y_pred),
+                                  columns=['id', 'status_group'])
+        results_df.to_csv(output_file, index_label=False, index=False)
 
     def gen_test_set(self,
                      csv_train_X='../data_test/train_X.csv',
@@ -506,7 +554,8 @@ class PumpModel(object):
                      csv_test_X='../data_test/test.csv',
                      csv_test_y='../data_test/test_y_dummy.csv'):
         """
-        Generates random test/training split from current training set and writes to files.
+        Generates random test/training split from current training set
+            and writes to files.
         input:
              self
            filenames to write to
@@ -517,14 +566,14 @@ class PumpModel(object):
         """
         print("Generating test set")
         df = self.df
-        df_y = df[['id','status_group']]
-        df_X = df.drop(['status_group'],axis=1)
+        df_y = df[['id', 'status_group']]
+        df_X = df.drop(['status_group'], axis=1)
         X_train, X_test, y_train, y_test = train_test_split(df_X, df_y)
 
-        X_train.to_csv(csv_train_X,index_label=False,index=False)
-        y_train.to_csv(csv_train_y,index_label=False,index=False)
-        X_test.to_csv(csv_test_X,index_label=False,index=False)
-        y_test.to_csv(csv_test_y,index_label=False,index=False)
+        X_train.to_csv(csv_train_X, index_label=False, index=False)
+        y_train.to_csv(csv_train_y, index_label=False, index=False)
+        X_test.to_csv(csv_test_X, index_label=False, index=False)
+        y_test.to_csv(csv_test_y, index_label=False, index=False)
 
 
 # <codecell>
