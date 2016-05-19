@@ -186,7 +186,7 @@ def fillTest(tst, imputeMap):
    Simply re-sort if original order is desired.
   """
    
-  test=tst.copy()
+  test_imp=tst.copy()
   
   imputeCols = ['gps_height','population','latitude','longitude','construction_year', 'subvillage','ward','lga','region_code']
   
@@ -199,16 +199,47 @@ def fillTest(tst, imputeMap):
   geogHierarch = np.array(['subvillage','ward','lga','region_code'])
 
   #replace continuous predictor missing values (0s) with NaN
-  test.population.replace({0:np.nan}, inplace=True)   
-  test.gps_height.replace({0:np.nan}, inplace=True)
-  test['construction_year']=test['construction_year'].astype('int64')
-  test.loc[test.construction_year==0,['construction_year']]=np.nan
+  test_imp.population.replace({0:np.nan}, inplace=True)   
+  test_imp.gps_height.replace({0:np.nan}, inplace=True)
+  test_imp['construction_year']=test_imp['construction_year'].astype('int64')
+  test_imp.loc[test_imp.construction_year==0,['construction_year']]=np.nan
 
   #replace lat/long outliers with NaN; replace in plce won't work for multiple columns
-  test.loc[((test.longitude==0)&(test.latitude==-2.000000e-08)),['latitude','longitude']]=test.loc[((test.longitude==0)&(test.latitude==-2.000000e-08)),['latitude','longitude']].replace({'latitude':{-2.000000e-08:np.nan}, 'longitude':{0.0:np.nan}}, regex=False)
+  test_imp.loc[((test_imp.longitude==0)&(test_imp.latitude==-2.000000e-08)),['latitude','longitude']]=test_imp.loc[((test_imp.longitude==0)&(test_imp.latitude==-2.000000e-08)),['latitude','longitude']].replace({'latitude':{-2.000000e-08:np.nan}, 'longitude':{0.0:np.nan}}, regex=False)
 
 
 
+  #BACKUP IMPUTE STRATEGY: NOT USING REFERENCE MAP
+  """
+  test.gps_height.fillna(test.groupby(['subvillage'])['gps_height'].transform('mean'), inplace=True)
+  test.gps_height.fillna(test.groupby(['ward'])['gps_height'].transform('mean'), inplace=True)
+  test.gps_height.fillna(test.groupby(['lga'])['gps_height'].transform('mean'), inplace=True)
+  test.gps_height.fillna(test.groupby(['region_code'])['gps_height'].transform('mean'), inplace=True)
+
+  test.population.fillna(test.groupby(['subvillage'])['population'].transform('mean'), inplace=True)
+  test.population.fillna(test.groupby(['ward'])['population'].transform('mean'), inplace=True)
+  test.population.fillna(test.groupby(['lga'])['population'].transform('mean'), inplace=True)
+  test.populationr.fillna(test.groupby(['region_code'])['population'].transform('mean'), inplace=True)
+  
+  test.construction_year.fillna(test.groupby(['subvillage'])['construction_year'].transform('mean'), inplace=True)
+  test.construction_year.fillna(test.groupby(['ward'])['construction_year'].transform('mean'), inplace=True)
+  test.construction_year.fillna(test.groupby(['lga'])['construction_year'].transform('mean'), inplace=True)
+  test.construction_year.fillna(test.groupby(['region_code'])['construction_year'].transform('mean'), inplace=True)
+  
+  test.latitude.fillna(test.groupby(['subvillage'])['latitude'].transform('mean'), inplace=True)
+  test.latitude.fillna(test.groupby(['ward'])['latitude'].transform('mean'), inplace=True)
+  test.latitude.fillna(test.groupby(['lga'])['latitude'].transform('mean'), inplace=True)
+  test.latitude.fillna(test.groupby(['region_code'])['latitude'].transform('mean'), inplace=True)
+  
+  test.longitude.fillna(test.groupby(['subvillage'])['longitude'].transform('mean'), inplace=True)
+  test.longitude.fillna(test.groupby(['ward'])['longitude'].transform('mean'), inplace=True)
+  test.longitude.fillna(test.groupby(['lga'])['longitude'].transform('mean'), inplace=True)
+  test.longitude.fillna(test.groupby(['region_code'])['longitude'].transform('mean'), inplace=True)
+  """  
+
+  df_id = test_imp[['id']]
+  test = test_imp
+  
   for col in numCols:
     if test[col].isnull().sum():
       #subset ad remove from test frame col specific nulls (will append filled values later)
@@ -238,10 +269,14 @@ def fillTest(tst, imputeMap):
       test = pd.concat([test, test_filled, test_sub], axis=0, ignore_index=True)
   
   
+  
   #make sure construction year is an integer col    
   test['construction_year']=test['construction_year'].astype('int64')
+  
+  
+  df_merge = pd.merge(df_id, test, on='id')
     
-  return test
+  return df_merge
 
 
 
