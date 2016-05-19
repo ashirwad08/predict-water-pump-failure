@@ -21,7 +21,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.cross_validation import train_test_split
 from sklearn.cross_validation import KFold
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, accuracy_score
 
 import patsy
 import numpy as np
@@ -142,6 +142,8 @@ class PumpModel(object):
         print('predicting y...')
         self.y_pred_realtest = model.predict(X_test)
         self.print_test_predictions(self.y_pred_realtest)
+        print('accuracy %4.4f' % 
+                accuracy_score(y_test, self.y_pred_realtest))
         return self.y_pred_realtest
 
     def run_models(self, df=pd.DataFrame(),
@@ -578,27 +580,42 @@ class PumpModel(object):
 
 # <codecell>
 def main():
-    print('run batch data manipulations and test on models')
+    print('Run batch data manipulations and test on models')
 # <codecell>
     pm = PumpModel()
 
 # <codecell>
     # first batch
-    pm.run_batch()
+    #pm.run_batch()
 
 # <codecell>
     # second batch with clean_features
-    pm.run_batch(flag_interactions=False, flag_clean_features=True)
+    #pm.run_batch(flag_interactions=False, flag_clean_features=True)
 
 # <codecell>
     # 3rd batch with feature interactions
-    pm.run_batch(flag_interactions=True, flag_clean_features=False)
+    #pm.run_batch(flag_interactions=True, flag_clean_features=False)
 
 # <codecell>
     # 4th batch with feature interactions and clean_features
-    pm.run_batch(flag_interactions=True, flag_clean_features=True)
+    #pm.run_batch(flag_interactions=True, flag_clean_features=True)
 
 # <codecell>
-# if __name__ == "__main__":
-#     main()
+    # set best parameters
+    print('Run batch with best parameters')
+    model = RandomForestClassifier(max_depth=18, bootstrap=False,
+            max_features=25, n_estimators=291,n_jobs=-1)
+    
+    pm.run_batch_realtest(model=model, flag_interactions=False,
+            impute_func=imputeTrain, fill_test_func=fillTest,
+            flag_clean_features=True)
+
+    pm.run_batch(flag_interactions=False,
+            impute_func=imputeTrain, fill_test_func=fillTest,
+            flag_clean_features=True)
+
+
+# <codecell>
+if __name__ == "__main__":
+    main()
 # <codecell>
