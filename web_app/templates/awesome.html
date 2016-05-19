@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tanzania water pump failure predictor App</title>
+    <link rel="stylesheet" href="static/d3.slider.css" />
+    <style>
+
+     body {
+       font-family: Verdana,Arial,sans-serif;
+     }
+
+     h2 {
+       font-size: 1.2em;
+       margin: 60px 0 5px 0;
+       color: gray
+     }
+
+     .space {
+       margin-bottom: 20 px;
+     }
+
+     .wrapper {
+       width: 800px;
+       margin-left: auto;
+       margin-right: auto;
+       margin-bottom: 0px;
+     }
+
+     #bar_chart {
+       margin-bottom: 0 px;
+     }
+
+     .bar {
+       fill: #FF75A3;
+     }
+
+     span {
+       color: steelblue;
+     }
+
+    </style>
+  </head>
+
+  <body>
+
+    <div id="chart_area" class="wrapper">
+      <h2 class="feature">Threshold: <span id="thresh">.5</span></h2>
+      <div id="thresh_slider"></div>
+      <!--p class="space"></p-->
+      <!--h2>Precision/Recall</h2-->
+      <p class="space"></p>
+      <div id="bar_chart">
+      <svg id="mySvg" width="0" height="0">
+        <defs id="mdef">
+	<pattern id="image" x="0" y="0" height="1" width="1">
+          <image x="0" y="0" width="550" height="550" xlink:href="/static/tanzania.jpg"></image>
+        </pattern>
+  </defs>
+      </div>
+    </div>
+    <div>
+      </div>
+
+    <!-- Import the libraries: jQuery, d3, d3.slider -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="static/d3.slider.js"></script>
+
+    <script>
+
+     <!-- SINGLE BAR CHART -->
+
+     var current_thresh = .5;
+    var current_accuracy = 81;
+    var chart_width = 800;
+    var chart_height = 600;
+    var border_size = 20;
+    var precision = 100.0;
+    var recall = 80;
+
+    var my_data = {{data_json | safe}};
+
+      
+     var chart = d3.select("#bar_chart")
+    		   .append("svg:svg")
+                   .attr("stroke","black")
+                   .attr("width", chart_width)
+                   .attr("height", chart_height);
+
+    var border = chart.append("svg:rect")
+    		      .attr("id","border")
+    		      .attr("width",chart_width-border_size/2)
+    		      .attr("height", chart_height-border_size/2)
+    		      .attr("x", border_size/2)
+    		      .attr("y", border_size/2)
+    		      .attr("rx", 10)
+    		      .attr("ry", 10)
+    		      .attr("fill","beige")
+    		      .attr("stroke","gray")
+    		      .attr("stroke-width",2)
+
+    var map = chart.append("svg:rect")
+         .attr("class", "map")
+     	 .attr("x", 225)
+     	 .attr("y", 30)
+     	 .attr("height", 525)
+     	 .attr("width", 550)
+         .attr("rx", 5)
+         .attr("ry", 5)
+         .style("fill", "url(#image)")       
+         .style("stroke", "black")     
+         .style("stroke-width", 0.25)
+
+    //circle_size = [5, 5];
+    //circle_lat =  [225, 375];
+    //circle_lon = [575, 575];
+    //circle_good = [1, 0];
+    colors = ["red","green"];
+
+      var lat_scale = d3.scale.linear()
+                             .domain([1,-10 ])
+                             .range([100, 530]);
+
+     var lon_scale = d3.scale.linear()
+                             .domain([30, 40])
+                             .range([300, 700]);
+
+
+    var circle_size = 5; 
+    var circles =
+    chart.selectAll("circle").data(my_data);
+
+    circles.enter().append("circle")
+    .attr({
+          cx: function(d,i) {return lon_scale(d['longitude']);},
+          cy: function(d,i) {return lat_scale(d['latitude']);},
+          r: function(d) {return circle_size;},
+          fill: function(d,i) {if (d['func'] > thresh) {return colors[1]}
+    else {return colors[0]};}
+});
+     var precision_scale = d3.scale.linear()
+                                .domain([0, 100])
+                                .range([0, 400]);
+
+     var bar = chart.append("g")
+                    .attr("class", "bar");
+
+     bar.append("svg:rect")
+          .attr("id", "precision_bar")
+          .attr("class", "bar")
+    		      .attr("x", border_size*1.75)
+    		      .attr("y", border_size + 25 + 40)
+    .attr("height", precision_scale(precision))
+    .style("fill","#c0f0f0")
+          .attr("width", 40);
+
+         bar.append("text")
+        .attr("id", "precision_label")
+        .attr("dy", ".75em")
+        .attr("x", border_size*3)
+        .attr("y", border_size+10)
+        .attr("text-anchor", "middle")
+        .style("stroke", "black")
+        .attr("font-size", 14)
+        .text("Efficiency");
+
+     bar.append("text")
+        .attr("id", "precision_text")
+        .attr("dy", ".75em")
+        .attr("x", border_size*3)
+        .attr("y", border_size+40)
+        .attr("text-anchor", "middle")
+        .style("stroke", "gray")
+        .attr("font-size", 14)
+        .text(precision + "%");
+
+         bar.append("svg:rect")
+          .attr("id", "recall_bar")
+          .attr("class", "bar")
+    		      .attr("x", border_size*2 + 80)
+    		      .attr("y", border_size + 25 + 40)
+          .attr("height", precision_scale(recall))
+        .style("stroke", "black")
+    .style("fill","#e09090")
+          .attr("width", 40);
+
+     bar.append("text")
+        .attr("id", "recall_text")
+        .attr("dy", ".75em")
+        .attr("x", border_size*3+86)
+        .attr("y", border_size+40)
+        .attr("text-anchor", "middle")
+        .style("stroke", "gray")
+        .attr("font-size", 14)
+        .text(recall.toFixed(1) + "%");
+
+         bar.append("text")
+        .attr("id", "recall_label")
+        .attr("dy", ".75em")
+        .attr("x", border_size*3+86)
+        .attr("y", border_size+10)
+        .attr("text-anchor", "middle")
+        .style("stroke", "black")
+        .attr("font-size", 14)
+        .text("Coverage");
+
+     <!-- FUNCTION TO GET CHANCE FROM YOUR PREDICTOR WITH AJAX AND CHANGE BAR  HEIGHT -->
+     function getAndDrawStats(thresh){
+
+        circles.transition().duration(500)
+               .style({fill: function(d,i) {if (d['func'] > thresh) {return colors[1]}else {return colors[0]};}});
+
+      $.ajax({
+         type: "POST",
+         contentType: "application/json; charset=utf-8",
+         url: "/score",
+         dataType: "json",
+         async: true,
+         data: "{\"thresh\": ["+thresh+"]}",
+         success: function (data_out) {
+           var precision = data_out["precision"];
+           var recall = data_out["recall"];
+           d3.select("#precision_bar")
+             .attr("height", precision_scale(precision));
+           d3.select("#precision_text")
+             .text(precision + "%");
+           d3.select("#recall_bar")
+             .attr("height", precision_scale(recall));
+           d3.select("#recall_text")
+             .text(recall + "%");
+         },
+         error: function (result) {
+         }
+})
+         
+
+     }
+
+     <!-- SLIDERS -->
+
+     d3.select('#thresh_slider')
+       .call(
+         d3.slider()
+           .value(current_thresh)
+           .min(0)
+           .max(1)
+           .axis(true)
+           .orientation("horizontal")
+           .on("slide", function(evt,value) {
+             d3.select('#thresh').text(value.toFixed(2));
+             current_thresh = value;
+             getAndDrawStats(current_thresh)
+           }
+           )
+       );
+
+
+
+    </script>
+  </body>
+</html>
