@@ -120,7 +120,6 @@ class PumpModel(object):
             self.y_pred_realtest
         """
         df = self.df
-        impute_map = None
         if impute_func:
             print('imputing data...')
             df, self.df_X_realtest = self.impute_data(df, self.df_X_realtest,
@@ -161,23 +160,28 @@ class PumpModel(object):
             self.split_n_fit_train(model, df,
                                    self.impute_func, self.fill_test_func)
 
-    def run_KFold(self, model, df_X=None, df_y=None, n_folds=5):
+    def run_KFold(self, model, df=pd.DataFrame(), n_folds=5,
+                  impute_func=None, fill_test_func=None):
         """ given model, X, y, print score of the fit on KFold test"""
-        if df_X is None or df_X.empty:
-            df_X = self.df_X
-        if df_y is None or df_y.empty:
-            df_y = self.df_y
-        if df_X is None or df_y is None:
-            raise Exception('Need to run reday_for_model first')
-
+        if df.empty:
+            df = self.df
         scores = []
         cnt = 0
-        for train_index, test_index in KFold(len(df_y), n_folds=n_folds):
-            X_train = df_X.iloc[train_index, :]
-            y_train = df_y.iloc[train_index, :]
-            X_test = df_X.iloc[test_index, :]
-            y_test = df_y.iloc[test_index, :]
-            model.fit(X_train, y_train.values.ravel())
+        for train_index, test_index in KFold(df.shape[0], n_folds=n_folds):
+            df_train = df.iloc[train_index, :]
+            df_test = df.iloc[test_index, :]
+            if impute_func:
+                df_train, df_test = self.impute_data(df_train, df_test,
+                                                     impute_func,
+                                                     fill_test_func)
+            X_train, y_train = self.ready_for_model_train(
+                df_train, flag_clean_features=self.flag_clean_features,
+                flag_interactions=self.flag_interactions)
+
+            X_test, y_test = self.ready_for_model_test(
+                df_test, flag_interactions=self.flag_interactions)
+
+            model.fit(X_train, y_train.ravel())
             score = model.score(X_test, y_test)
             scores.append(score)
             cnt += 1
@@ -349,6 +353,7 @@ class PumpModel(object):
         default for now just include scheme_name since it seems to
         be particularly important
         """
+        print('cleaning features...')
         if df.empty:
             df = self.df
 
@@ -356,7 +361,7 @@ class PumpModel(object):
             least_common = [x[0] for x in collections.Counter(df[feat]).
                             most_common()[N:-1]]
             for label in least_common:
-                df.loc[:, feat] = df[feat].replace(label, 'NaN')
+                df.loc[:, feat] = df[feat].replace(label, 'other')
         return df
 
     def preprocess_features(self, df, N=25):
