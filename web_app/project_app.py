@@ -7,6 +7,9 @@ from flask import Blueprint, request, render_template
 #---------- MODEL IN MEMORY ----------------#
 thresh = .5
 
+class Dict_obj(object):
+    stats_dict = {}
+
 data_log_reg = pd.read_csv("data/data_logReg.csv")
 data_rand_forest = pd.read_csv("data/data_randForest.csv")
 
@@ -15,8 +18,8 @@ data = data_rand_forest
 status = data['status']
 pred_func = data['func'].values
 
-lat = data['latitude']
-lon = data['longitude']
+#lat = data['latitude']
+#lon = data['longitude']
 
 prediction = np.array([1 if x>thresh else 0 for x in pred_func])
 not_prediction = [1 if x==0 else 0 for x in prediction]
@@ -42,9 +45,6 @@ def viz_page():
     data_json = data.to_json(orient="records")
     return render_template('awesome.html', data_json=data_json, data_table=table_html)
 
-    #with open("awesome.html", 'r') as viz_file:
-    #    return viz_file.read()
-
 # Get threshold value and return precision/recall (and data points with pumps predicted to need repairs)
 @app.route("/score", methods=["POST"])
 def score():
@@ -55,20 +55,25 @@ def score():
     """
     data = flask.request.json
     thresh = data["thresh"]
-    
-    (precision,recall) = calculate_stats(thresh)
+
+    if Dict_obj.stats_dict.has_key(thresh[0]):
+        print "Found previously"
+    else:
+        print "not found -- calculating " + str(thresh[0])
+        (precision,recall) = calculate_stats(thresh[0])
+        Dict_obj.stats_dict[thresh[0]] = (precision,recall)
+        # Fill precision/recall tables for faster loading in future 
+        for thresh_val in np.linspace(0,1.0,101):
+            if not Dict_obj.stats_dict.has_key(thresh_val):
+                print "calculating for " + str(thresh_val)
+                (precision,recall) = calculate_stats(thresh_val)
+                Dict_obj.stats_dict[thresh_val] = (precision,recall)
+    (precision,recall) = Dict_obj.stats_dict[thresh[0]]
     print("Thresh: " + str(thresh) + " P: " + str(precision) + " R: " + str(recall))
 
-    bad_pump_lat = lat[pred_func < thresh]
-    bad_pump_lon = lon[pred_func < thresh]
-    good_pump_lat = lat[pred_func >= thresh]
-    good_pump_lon = lon[pred_func >= thresh]
-
     # Put the result in a nice dict so we can send it as json
-#    results = {"precision": np.around(precision*100),"recall": np.around(recall*100), "bad_pump_lat":bad_pump_lat, "bad_pump_lon":bad_pump_lon,"good_pump_lat":good_pump_lat,"good_pump_lon":good_pump_lon}
     results = {"precision": np.around(precision*100),"recall": np.around(recall*100)}
     return flask.jsonify(results)
-    #return flask.jsonify(data)
 
 def calculate_stats(thresh):
     pred_func = data['func'].values
@@ -102,5 +107,5 @@ def calculate_stats(thresh):
 
 # Start the app server on port 80
 # (The default website port)
-app.debug = True
+#app.debug = True
 app.run(host='0.0.0.0', port=5000)
