@@ -15,7 +15,6 @@ import collections
 
 # import statsmodels.formula.api as smf
 from sklearn.linear_model import LogisticRegression
-from sklearn.linear_model import LogisticRegressionCV
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
@@ -26,7 +25,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.grid_search import RandomizedSearchCV
 from scipy.stats import randint as sp_randint
 from sklearn.metrics import accuracy_score
- 
+
 
 import patsy
 import numpy as np
@@ -40,7 +39,7 @@ from impute import imputeTrain
 
 
 class PumpModel(object):
-    
+
     def __init__(self,
                  csv_train_X = '../data/train_X.csv',
                  csv_train_y = '../data/train_y.csv',
@@ -403,8 +402,10 @@ class PumpModel(object):
                         self.df_train,
                         flag_interactions=self.flag_interactions,
                         flag_clean_features=self.flag_clean_features)
+
         X_test, y_test = self.ready_for_model_test(
             self.df_test, flag_interactions=self.flag_interactions)
+
         model.fit(X_train, y_train.ravel())
         print()
         print('{}'.format(model).split('(')[0])
@@ -481,7 +482,7 @@ class PumpModel(object):
                                output_file='../data/test_predict_y.csv'):
         """
         Saves predictions on test set to csv file.
-        
+
         input:
             self
             output_file - filename to save predictions to
@@ -494,13 +495,13 @@ class PumpModel(object):
         # convert prediction numbers to corresponding labels
         labels = self.LABELS
         y_pred = [labels[int(x)] for x in y_pred]
-        
+
         # get corresponding test ids
         test_ids = self.ids[self.train_set_len:]
 
         # zip together ids and results and print
         results_df = pd.DataFrame(zip(test_ids,y_pred),columns=['id','status_group'])
-        results_df.to_csv(output_file,index_label=False,index=False)
+        results_df.to_csv(output_file, index_label=False,index=False)
 
     def gen_test_set(self,
                      csv_train_X='../data_test/train_X.csv',
@@ -531,34 +532,45 @@ class PumpModel(object):
 
 
 
-    def best_RandomForest(X, y):
-        
-        X_train, X_test, y_train, y_test = train_test_split(X,
-                y.ravel(), random_state=42)
- 
-        clf = ExtraTreesClassifier(bootstrap = False)
- 
+    def best_RandomForest(self,df=pd.DataFrame()):
+
+        if df.empty:
+            df = self.df
+
+        self.df_train, self.df_test = self.split_df(df)
+
+        X_train, y_train = self.ready_for_model_train(self.df_train)
+        X_test, y_test = self.ready_for_model_test(self.df_test)
+
+
+
+        clf = RandomForestClassifier(bootstrap = False)
+
         grid = {'n_estimators': sp_randint(250, 400),
-             'min_samples_leaf' : sp_randint(1, 12),
-             'max_features' : sp_randint(5, 50),
-             'max_depth': sp_randint(3,30)}
- 
-        clf_rfc = RandomizedSearchCV(clf, n_jobs=4, n_iter=10,
-                                  param_distributions=grid,
-                                  scoring='accuracy')
- 
-        y_hat = clf_rfc.fit(X_train,
-                     y_train.ravel()).predict(X_test)
- 
+                #'min_samples_leaf': sp_randint(1, 12),
+                'max_features': sp_randint(5, 50),
+                'max_depth': sp_randint(5, 30)}
+
+        clf_rfc = RandomizedSearchCV(clf, n_jobs=4, n_iter=15,
+                                    param_distributions=grid,
+                                    scoring='accuracy')
+
+        print("Finding the best parameters..")
+
+        clf_rfc.fit(X_train, y_train.ravel())
+        print("Getting predicts for..")
+        y_hat = clf_rfc.predict(X_test)
+
+
         print('Best Params: \n')
         for k, v in clf_rfc.best_params_.items():
             print(k, v)
- 
+
         print("Accuracy with Random Forest = %4.4f"  %
             accuracy_score(y_test.ravel(), y_hat))
-        binarize_y_confustion_matrix(y_test.ravel(), y_hat)
+        #binarize_y_confustion_matrix(y_test, y_hat)
         return(clf_rfc.best_params_)
- 
+
 
 
 # <codecell>
@@ -569,21 +581,42 @@ def main():
 
 # <codecell>
     # first batch
-    pm.run_batch()
+
+    #pm.run_batch()
 
 # <codecell>
     # second batch with clean_features
-    pm.run_batch(flag_interactions=False, flag_clean_features=True)
+    #pm.run_batch(flag_interactions=False, flag_clean_features=True)
 
 # <codecell>
     # 3rd batch with feature interactions
-    pm.run_batch(flag_interactions=True, flag_clean_features=False)
+    #pm.run_batch(flag_interactions=True, flag_clean_features=False)
 
 # <codecell>
     # 4th batch with feature interactions and clean_features
-    pm.run_batch(flag_interactions=True, flag_clean_features=True)
+    #pm.run_batch(flag_interactions=True, flag_clean_features=True)
 
 # <codecell>
-# if __name__ == "__main__":
-#     main()
+
+    print('\n Trying RandomForestClassifier with best param and randomazed.')
+    best = pm.best_RandomForest()
+    print(best)
+
+    # also use KFold to make sure we cross validate
+    model = RandomForestClassifier(max_depth = best['max_depth'],
+                                    bootstrap = False,
+                                    #min_samples_leaf = best['min_samples_leaf'],
+                                    max_features = best['max_features'],
+                                    n_estimators = best['n_estimators'])
+
+    print('\n Best parameters for RandomForestClassifier.')
+    for k, v in best.items():
+        print(k, v)
+    print('using KFold...')
+
+
+# <codecell>
+
+if __name__ == "__main__":
+    main()
 # <codecell>
