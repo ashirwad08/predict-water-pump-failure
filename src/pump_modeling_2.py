@@ -22,6 +22,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.cross_validation import train_test_split
 from sklearn.cross_validation import KFold
 from sklearn.metrics import confusion_matrix, accuracy_score
+from sklearn.grid_search import RandomizedSearchCV
+from scipy.stats import randint as sp_randint
 
 import patsy
 import numpy as np
@@ -141,7 +143,7 @@ class PumpModel(object):
         print('predicting y...')
         self.y_pred_realtest = model.predict(X_test)
         self.print_test_predictions(self.y_pred_realtest)
-        print('accuracy %4.4f' % 
+        print('accuracy %4.4f' %
                 accuracy_score(y_test, self.y_pred_realtest))
         return self.y_pred_realtest
 
@@ -583,6 +585,46 @@ class PumpModel(object):
         y_test.to_csv(csv_test_y, index_label=False, index=False)
 
 
+    def best_RandomForest(self,df=pd.DataFrame()):
+
+        if df.empty:
+            df = self.df
+
+        self.df_train, self.df_test = self.split_df(df)
+
+        X_train, y_train = self.ready_for_model_train(self.df_train)
+        X_test, y_test = self.ready_for_model_test(self.df_test)
+
+
+        clf = RandomForestClassifier(bootstrap = False)
+
+        grid = {'n_estimators': sp_randint(250, 400),
+        #'min_samples_leaf': sp_randint(1, 12),
+                'max_features': sp_randint(5, 50),
+                'max_depth': sp_randint(5, 30)}
+
+        clf_rfc = RandomizedSearchCV(clf, n_jobs=4, n_iter=15,
+                                    param_distributions=grid,
+                                    scoring='accuracy')
+
+        print("Finding the best parameters..")
+
+        clf_rfc.fit(X_train, y_train.ravel())
+        print("Getting predicts for..")
+        y_hat = clf_rfc.predict(X_test)
+
+
+        print('Best Params: \n')
+        for k, v in clf_rfc.best_params_.items():
+            print(k, v)
+
+        print("Accuracy with Random Forest = %4.4f"  %
+            accuracy_score(y_test.ravel(), y_hat))
+        #binarize_y_confustion_matrix(y_test, y_hat)
+        return(clf_rfc.best_params_)
+
+
+
 # <codecell>
 def main():
     print('Run batch data manipulations and test on models')
@@ -606,19 +648,21 @@ def main():
     #pm.run_batch(flag_interactions=True, flag_clean_features=True)
 
 # <codecell>
+    #Run parameter optimazation
+    #best = pm.best_RandomForest()
+
+
+# <codecell>
     # set best parameters
     print('Run batch with best parameters')
     model = RandomForestClassifier(max_depth=18, bootstrap=False,
             max_features=25, n_estimators=291,n_jobs=-1)
-    
-    pm.run_batch_realtest(model=model, flag_interactions=False,
+
+    y_hat =pm.run_batch_realtest( flag_interactions=False,
             impute_func=imputeTrain, fill_test_func=fillTest,
             flag_clean_features=True)
 
-    pm.run_batch(flag_interactions=False,
-            impute_func=imputeTrain, fill_test_func=fillTest,
-            flag_clean_features=True)
-
+    print(accuracy_score(pm.df_y_test,y_hat))
 
 # <codecell>
 if __name__ == "__main__":
