@@ -36,7 +36,7 @@
      }
 
      span {
-       color: steelblue;
+       color: white;
      }
 
     </style>
@@ -45,7 +45,7 @@
   <body>
 
     <div id="chart_area" class="wrapper">
-      <h2 class="feature">Threshold: <span id="thresh">.5</span></h2>
+      <h2 class="feature"> <span id="thresh">.5</span></h2>
       <div id="thresh_slider"></div>
       <!--p class="space"></p-->
       <!--h2>Precision/Recall</h2-->
@@ -76,8 +76,8 @@
     var chart_width = 800;
     var chart_height = 600;
     var border_size = 20;
-    var precision = 100.0;
-    var recall = 80;
+    var precision = 81.0;
+    var recall = 78;
 
     var my_data = {{data_json | safe}};
 
@@ -111,6 +111,8 @@
          .style("fill", "url(#image)")       
          .style("stroke", "black")     
          .style("stroke-width", 0.25)
+
+
 
     //circle_size = [5, 5];
     //circle_lat =  [225, 375];
@@ -147,7 +149,7 @@
 ;
      var precision_scale = d3.scale.linear()
                                 .domain([0, 100])
-                                .range([0, 400]);
+                                .range([0, 200]);
 
      var bar = chart.append("g")
                     .attr("class", "bar");
@@ -155,13 +157,17 @@
      bar.append("svg:rect")
           .attr("id", "precision_bar")
           .attr("class", "bar")
-    		      .attr("x", border_size*1.75)
-    		      .attr("y", border_size + 25 + 40)
-    .attr("height", precision_scale(precision))
-    .style("fill","#c0f0f0")
+    	  .attr("x", border_size*1.75)
+          .attr("y", border_size + 25 + 40)
+          .attr("height", precision_scale(precision))
+          .style("fill","#c0f0f0")
+ 	  .attr("rx", 4)
+ 	  .attr("ry", 4)
+ 	  .attr("stroke","gray")
+ 	  .attr("stroke-width",2)
           .attr("width", 40);
 
-         bar.append("text")
+     bar.append("text")
         .attr("id", "precision_label")
         .attr("dy", ".75em")
         .attr("x", border_size*3)
@@ -181,15 +187,17 @@
         .attr("font-size", 14)
         .text(precision + "%");
 
-         bar.append("svg:rect")
+     bar.append("svg:rect")
           .attr("id", "recall_bar")
           .attr("class", "bar")
-    		      .attr("x", border_size*2 + 80)
-    		      .attr("y", border_size + 25 + 40)
+    	  .attr("x", border_size*2 + 80)
+    	  .attr("y", border_size + 25 + 40)
           .attr("height", precision_scale(recall))
-        .style("stroke", "black")
-    // .style("fill","#e09090")
-    .style("fill","palegreen")
+          .style("fill","palegreen")
+    	  .attr("rx", 4)
+    	  .attr("ry", 4)
+    	  .attr("stroke","gray")
+    	  .attr("stroke-width",2)
           .attr("width", 40);
 
      bar.append("text")
@@ -202,7 +210,7 @@
         .attr("font-size", 14)
         .text(recall.toFixed(1) + "%");
 
-         bar.append("text")
+     bar.append("text")
         .attr("id", "recall_label")
         .attr("dy", ".75em")
         .attr("x", border_size*3+86)
@@ -211,6 +219,65 @@
         .style("stroke", "black")
         .attr("font-size", 14)
         .text("Coverage");
+
+     var info = chart.append("g")
+                     .attr("class", "info");
+
+     var info_y_offset = 350
+     var info_x_offset = 20
+     var bad_pump_bar_size = 180
+
+
+     chart.append("rect")
+     	  .attr("id", "box")
+     	  .attr("x", info_x_offset-4)
+     	  .attr("rx", 5)
+     	  .attr("ry", 5)
+     	  .attr("y",border_size+info_y_offset-8)
+     	  .attr("height", 100)
+          .attr("width", 200)
+          .style("fill","lightgray")
+     	  .style("stroke","black")
+
+     chart.append("text")
+     	  .attr("id", "cov-info")
+     	  .attr("dy", ".75em")
+     	  .attr("x", info_x_offset)
+     	  .attr("y",border_size+info_y_offset)
+     	  .attr("text-anchor","left")
+     	  .style("stroke","black")
+     	  .attr("font-size",14)
+     	  .text("Coverage")
+
+     chart.append("text")
+     	  .attr("id", "cov-info")
+     	  .attr("dy", ".75em")
+     	  .attr("x", info_x_offset)
+     	  .attr("y",border_size+info_y_offset+20)
+     	  .attr("text-anchor","left")
+     	  .style("stroke","black")
+     	  .attr("font-size",10)
+     	  .text("% of broken pumps checked")
+
+     chart.append("text")
+     	  .attr("id", "efficiency-info")
+     	  .attr("dy", ".75em")
+     	  .attr("x", info_x_offset)
+     	  .attr("y",border_size+info_y_offset+50)
+     	  .attr("text-anchor","left")
+     	  .style("stroke","black")
+     	  .attr("font-size",14)
+     	  .text("Efficiency")
+
+     chart.append("text")
+     	  .attr("id", "efficiency-info")
+     	  .attr("dy", ".75em")
+     	  .attr("x", info_x_offset)
+     	  .attr("y",border_size+info_y_offset+70)
+     	  .attr("text-anchor","left")
+     	  .style("stroke","black")
+     	  .attr("font-size",10)
+     	  .text("% checked pumps that are broken")
 
      <!-- FUNCTION TO GET CHANCE FROM YOUR PREDICTOR WITH AJAX AND CHANGE BAR  HEIGHT -->
      function getAndDrawStats(thresh){
@@ -249,13 +316,13 @@
 
      <!-- SLIDERS -->
 
-     d3.select('#thresh_slider')
+     var slider = d3.select('#thresh_slider')
        .call(
          d3.slider()
            .value(current_thresh)
            .min(0)
            .max(1)
-           .axis(true)
+           .axis(false)
            .orientation("horizontal")
            .on("slide", function(evt,value) {
              d3.select('#thresh').text(value.toFixed(2));
@@ -265,7 +332,26 @@
            )
        );
 
+/*     slider.append("text")
+        .attr("id", "min_thresh")
+        .attr("dy", ".75em")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("text-anchor", "left")
+        .style("stroke", "gray")
+        .attr("font-size", 10)
+        .text("High Efficiency");
 
+slider.append("text")
+        .attr("id", "max_thresh")
+        .attr("dy", ".75em")
+        .attr("x", 400)
+        .attr("y", 0)
+        .attr("text-anchor", "right")
+        .style("stroke", "black")
+        .attr("font-size", 10)
+        .text("                                  High Coverage");
+*/
 
     </script>
   </body>
