@@ -104,7 +104,7 @@
          .attr("class", "map")
      	 .attr("x", 225)
      	 .attr("y", 30)
-     	 .attr("height", 525)
+     	 .attr("height", 575)
      	 .attr("width", 550)
          .attr("rx", 5)
          .attr("ry", 5)
@@ -119,15 +119,15 @@
     colors = ["red","green"];
 
       var lat_scale = d3.scale.linear()
-                             .domain([1,-10 ])
-                             .range([100, 530]);
+                             .domain([-1,-10 ])
+                             .range([100, 500]);
 
      var lon_scale = d3.scale.linear()
                              .domain([30, 40])
-                             .range([300, 700]);
+                             .range([290, 720]);
 
 
-    var circle_size = 5; 
+    var circle_size = 4; 
     var circles =
     chart.selectAll("circle").data(my_data);
 
@@ -138,7 +138,13 @@
           r: function(d) {return circle_size;},
           fill: function(d,i) {if (d['func'] > thresh) {return colors[1]}
     else {return colors[0]};}
-});
+    
+})
+    .style({
+        "stroke-width": 0,
+        "opacity": 0.3
+})
+;
      var precision_scale = d3.scale.linear()
                                 .domain([0, 100])
                                 .range([0, 400]);
@@ -182,7 +188,8 @@
     		      .attr("y", border_size + 25 + 40)
           .attr("height", precision_scale(recall))
         .style("stroke", "black")
-    .style("fill","#e09090")
+    // .style("fill","#e09090")
+    .style("fill","palegreen")
           .attr("width", 40);
 
      bar.append("text")
@@ -209,7 +216,10 @@
      function getAndDrawStats(thresh){
 
         circles.transition().duration(500)
-               .style({fill: function(d,i) {if (d['func'] > thresh) {return colors[1]}else {return colors[0]};}});
+               .style({
+                  visibility: function(d, i){if (d['func'] > thresh) {return 'hidden'} else {return 'visible'};},
+                  // fill: function(d,i) {if (d['func'] > thresh) {return colors[1]}else {return colors[0]};}
+               });
 
       $.ajax({
          type: "POST",
