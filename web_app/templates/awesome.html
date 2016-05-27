@@ -5,15 +5,23 @@
     <title>Tanzania water pump failure predictor App</title>
     <link rel="stylesheet" href="static/d3.slider.css" />
     <style>
+     .clear
+     {
+       clear: both;
+     }
 
+     p {
+       font-family: Verdana,Arial,sans-serif;
+       margin: 5px 5px 5px 5px;
+     }
      body {
        font-family: Verdana,Arial,sans-serif;
      }
 
      h2 {
-       font-size: 1.2em;
-       margin: 60px 0 5px 0;
-       color: gray
+       font-size: 1.5em;
+       margin: 5px 5px 5px 5px;
+       color: dimgrey
      }
 
      .space {
@@ -35,6 +43,33 @@
        fill: #FF75A3;
      }
 
+     #left
+     {
+       font-size: .8em;
+       width: 300px;
+       float: left;
+       font-family: Verdana,Arial,sans-serif;
+       background: cornsilk;
+       border-style: groove;
+       margin-top: 60px;
+       margin-bottom: 60 px;
+       margin-left: 5px;
+       margin-right: 5 px;
+     }
+     #right
+     {
+       font-size: .8em;
+       width: 300px;
+       float: right;
+       font-family: Verdana,Arial,sans-serif;
+       background: cornsilk;
+       border-style: groove;
+       margin-top: 60px;
+       margin-bottom: 60 px;
+       margin-left: 5px;
+       margin-right: 5 px;
+     }
+
      span {
        color: white;
      }
@@ -43,13 +78,57 @@
   </head>
 
   <body>
+<div id ="left">
+  <h2>The Project</h2>
+  <p>The 
+  <a href="https://www.drivendata.org/competitions/7/">Driven Data
+  "Pump it up" Competition</a> challenges teams to use data
+  from <a href="http://taarifa.org/">Taarifa</a> and the <a href="http://maji.go.tz/">Tanzanian Ministry of Water</a> to accurately
+  predict the failure of waterpoints throughout Tanzania.  The dataset
+  provides a wealth of information, e.g., geographical
+  location, kind of pump, date of installation, management of the
+  pump, etc. to faciliate accurate data-driven predictions. </p>
 
+  <p>While the objective of the Data Driven competition is to maximize
+  the prediction accuracy (i.e., maximize the probability the
+  prediction is correct),  in addition to targeting this metric, our
+  team (Hans and Franz) has also put together a web application to
+  enable the Tanzanian Ministry of Water to 
+  trade-off "coverage" (% of all broken pumps that are correcly
+  classified)  and "efficiency" (% of pumps classified as broken that
+  actually are broken).  This enables the government to
+  effectively trade-off of resources and impact.</p>
+
+    <h2>The plots</h2>
+  <p>The bars on the left side of the app provide the coverage and
+  efficiency for a given setting.  The Tanzania map on the right side
+  of the app illustrates the geographical distribution of predicted
+  failing pumps (in our test data) with the location of each predicted
+  failing pump denoted by a red circle.  As the coverage increases the
+  number of predicted "bad" pumps increases.</p>
+</div>
+<div id ="right">
+  <h2>Using the App</h2>
+  <p>The slider at the top of the app allows the
+  user to trade-off between the coverage and efficiency metrics.  For example, sliding the
+  slider to the far right, will ensure that all bad pumps are
+  highlighted (maximize coverage), but many of the pumps highlighted
+  will be working pumps (lower efficiency).  Conversely, sliding the
+  slider to the far left will ensure that almost all of the pumps that
+  are highlighted are indeed broken (maximize efficiency) but many bad
+  pumps will not be highlighted.  A typical operating point would be
+  somewhere in between.</p>
+  <h2>About us</h2>
+  <p>We're a group of Data Scientists who are part of the <a
+  href="http://www.thisismetis.com">Metis</a> data science program.  Please drop us
+  an email at <a href="mailto:
+  h2otanzania@gmail.com">h20tanzania@gmail.com</a>.<br> for additional
+  information or just to let us know what you think of the app!</p>
+</div>
     <div id="chart_area" class="wrapper">
       <h2 class="feature"> <span id="thresh">.5</span></h2>
       <div id="thresh_slider"></div>
-      <!--p class="space"></p-->
-      <!--h2>Precision/Recall</h2-->
-      <p class="space"></p>
+      <h1 class="space"></h1>
       <div id="bar_chart">
       <svg id="mySvg" width="0" height="0">
         <defs id="mdef">
@@ -81,7 +160,7 @@
 
     var my_data = {{data_json | safe}};
 
-      
+
      var chart = d3.select("#bar_chart")
     		   .append("svg:svg")
                    .attr("stroke","black")
@@ -149,7 +228,7 @@
 ;
      var precision_scale = d3.scale.linear()
                                 .domain([0, 100])
-                                .range([0, 200]);
+                                .range([0, 375]);
 
      var bar = chart.append("g")
                     .attr("class", "bar");
@@ -223,10 +302,11 @@
      var info = chart.append("g")
                      .attr("class", "info");
 
-     var info_y_offset = 350
+     var info_y_offset = 475
      var info_x_offset = 20
      var bad_pump_bar_size = 180
-
+     var contact_info_y_offset = 130
+     var contact_info_x_offset = 20
 
      chart.append("rect")
      	  .attr("id", "box")
@@ -279,10 +359,42 @@
      	  .attr("font-size",10)
      	  .text("% checked pumps that are broken")
 
+/*     chart.append("rect")
+     	  .attr("id", "contact_box")
+     	  .attr("x", contact_info_x_offset-4)
+     	  .attr("rx", 5)
+     	  .attr("ry", 5)
+     	  .attr("y",border_size+info_y_offset+contact_info_y_offset-8)
+     	  .attr("height", 50)
+          .attr("width", 200)
+          .style("fill","lightgray")
+     	  .style("stroke","black")
+     var info = chart.select("contact_box")
+
+     chart.append("text")
+     	  .attr("id", "cov-info")
+     	  .attr("dy", ".75em")
+     	  .attr("x", contact_info_x_offset)
+     	  .attr("y",border_size+info_y_offset+contact_info_y_offset)
+     	  .attr("text-anchor","left")
+     	  .style("stroke","black")
+     	  .attr("font-size",14)
+     	  .text("Contact Info:")
+
+     chart.append("text")
+     	  .attr("id", "cov-info")
+     	  .attr("dy", ".75em")
+     	  .attr("x", contact_info_x_offset)
+     	  .attr("y",border_size+info_y_offset+contact_info_y_offset+20)
+     	  .attr("text-anchor","left")
+     	  .style("stroke","black")
+     	  .attr("font-size",10)
+     	  .text("h2otanzania@gmail.com")
+*/
      <!-- FUNCTION TO GET CHANCE FROM YOUR PREDICTOR WITH AJAX AND CHANGE BAR  HEIGHT -->
      function getAndDrawStats(thresh){
 
-        circles.transition().duration(500)
+        circles.transition().duration(0)
                .style({
                   visibility: function(d, i){if (d['func'] > thresh) {return 'hidden'} else {return 'visible'};},
                   // fill: function(d,i) {if (d['func'] > thresh) {return colors[1]}else {return colors[0]};}
@@ -322,7 +434,7 @@
            .value(current_thresh)
            .min(0)
            .max(1)
-           .axis(false)
+           .axis(true)
            .orientation("horizontal")
            .on("slide", function(evt,value) {
              d3.select('#thresh').text(value.toFixed(2));
