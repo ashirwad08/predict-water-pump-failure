@@ -12,6 +12,7 @@ import pandas as pd
 import re
 from itertools import combinations
 import collections
+from xgboost import XGBClassifier
 
 # import statsmodels.formula.api as smf
 from sklearn.linear_model import LogisticRegression
@@ -38,9 +39,9 @@ from impute import imputeTrain, fillTest
 
 class PumpModel(object):
     def __init__(self,
-                 csv_train_X='../data/train_X.csv',
-                 csv_train_y='../data/train_y.csv',
-                 csv_test_X='../data/test.csv'):
+                 csv_train_X = '../data/train_X.csv',
+                 csv_train_y = '../data/train_y.csv',
+                 csv_test_X = '../data/test.csv'):
         """
         input:
             csv_train_X - file location
@@ -149,7 +150,7 @@ class PumpModel(object):
 
     def run_models(self, df=pd.DataFrame(),
                    models=[LogisticRegression(), DecisionTreeClassifier(),
-                           KNeighborsClassifier(), GaussianNB(),
+                           KNeighborsClassifier(), GaussianNB(), XGBClassifier(),
                            RandomForestClassifier()]):
         """ run split_n_fit through severl models, default:
                 [LogisticRegression(), DecisionTreeClassifier(),
@@ -284,7 +285,7 @@ class PumpModel(object):
 
         self.cols_X = self.df_X.columns
         self.X = self.df_X.values
-        self.y = self.df_y.values
+        self.y = self.df_y.values.ravel()
         return (self.X, self.y)
 
     def ready_for_model_test(self, df_test,
@@ -553,7 +554,7 @@ class PumpModel(object):
         test_ids = self.realtest_IDs
 
         # zip together ids and results and print
-        results_df = pd.DataFrame(zip(test_ids, y_pred),
+        results_df = pd.DataFrame(list(zip(test_ids, y_pred)),
                                   columns=['id', 'status_group'])
         results_df.to_csv(output_file, index_label=False, index=False)
 
@@ -585,32 +586,47 @@ class PumpModel(object):
         y_test.to_csv(csv_test_y, index_label=False, index=False)
 
 
-    def best_RandomForest(self,df=pd.DataFrame()):
-
-        if df.empty:
-            df = self.df
-
-        self.df_train, self.df_test = self.split_df(df)
-
-        X_train, y_train = self.ready_for_model_train(self.df_train)
-        X_test, y_test = self.ready_for_model_test(self.df_test)
+    def best_RandomForest(self, df=pd.DataFrame(),
+        flag_interactions=False,
+                            flag_clean_features=False,
+                            impute_func=None,
+                            fill_test_func=None):
 
 
-        clf = RandomForestClassifier(bootstrap = False)
+        df = self.df
+        if impute_func:
+            print('imputing data...')
+            df, self.df_X_realtest = self.impute_data(df,
+                                                    self.df_X_realtest,
+                                                    impute_func,
+                                                    fill_test_func)
 
-        grid = {'n_estimators': sp_randint(250, 400),
-        #'min_samples_leaf': sp_randint(1, 12),
-                'max_features': sp_randint(5, 50),
-                'max_depth': sp_randint(5, 30)}
+        print('get X, y from training set')
+        (self.X, self.y) = self.ready_for_model_train(
+                                    df, flag_interactions=flag_interactions,
+                                    flag_clean_features=flag_clean_features)
 
-        clf_rfc = RandomizedSearchCV(clf, n_jobs=4, n_iter=15,
+
+        clf = RandomForestClassifier(bootstrap=False)
+
+        grid = {'n_estimators': sp_randint(170, 350),
+                'min_samples_leaf': sp_randint(1, 12),
+                'max_features': sp_randint(2, 50),
+                'max_depth': sp_randint(5, 30),
+                'criterion': ['entropy','gini']}
+
+        clf_rfc = RandomizedSearchCV(clf, n_jobs=4,
+                                    n_iter=25, cv=6,
                                     param_distributions=grid,
                                     scoring='accuracy')
 
-        print("Finding the best parameters..")
+        print('Finding the best parameters...')
+        clf_rfc.fit(self.X, self.y.ravel())
 
-        clf_rfc.fit(X_train, y_train.ravel())
-        print("Getting predicts for..")
+        print('preparing X, y from test set...')
+        X_test, y_test = self.ready_for_model_test(
+            self.df_X_realtest, flag_interactions)
+
         y_hat = clf_rfc.predict(X_test)
 
 
@@ -619,7 +635,59 @@ class PumpModel(object):
             print(k, v)
 
         print("Accuracy with Random Forest = %4.4f"  %
-            accuracy_score(y_test.ravel(), y_hat))
+            accuracy_score(y_test, y_hat))
+        #binarize_y_confustion_matrix(y_test, y_hat)
+        return(clf_rfc.best_params_)
+
+    def best_XGboost(self, df=pd.DataFrame(),
+        flag_interactions=False,
+                            flag_clean_features=False,
+                            impute_func=None,
+                            fill_test_func=None):
+
+
+        df = self.df
+        if impute_func:
+            print('imputing data...')
+            df, self.df_X_realtest = self.impute_data(df,
+                                                    self.df_X_realtest,
+                                                    impute_func,
+                                                    fill_test_func)
+
+        print('get X, y from training set')
+        (self.X, self.y) = self.ready_for_model_train(
+                                    df, flag_interactions=flag_interactions,
+                                    flag_clean_features=flag_clean_features)
+
+
+        clf = XGBClassifier()
+
+        grid = {'n_estimators': sp_randint(100, 600),
+                'learning_rate': [0.01, 0.03, 0.05, 0.1, 0.3, 0.5],
+                'max_depth': sp_randint(5, 30),
+                'min_child_weight': sp_randint(1, 5)}
+
+        clf_rfc = RandomizedSearchCV(clf, n_jobs=3,
+                                    n_iter=15, cv=4,
+                                    param_distributions=grid,
+                                    scoring='accuracy')
+
+        print('Finding the best parameters...')
+        clf_rfc.fit(self.X, self.y.ravel())
+
+        print('preparing X, y from test set...')
+        X_test, y_test = self.ready_for_model_test(
+            self.df_X_realtest, flag_interactions)
+
+        y_hat = clf_rfc.predict(X_test)
+
+
+        print('Best Params: \n')
+        for k, v in clf_rfc.best_params_.items():
+            print(k, v)
+
+        print("Accuracy with Random Forest = %4.4f"  %
+            accuracy_score(y_test, y_hat))
         #binarize_y_confustion_matrix(y_test, y_hat)
         return(clf_rfc.best_params_)
 
@@ -627,7 +695,7 @@ class PumpModel(object):
 
 # <codecell>
 def main():
-    print('Run batch data manipulations and test on models')
+    #print('Run batch data manipulations and test on models')
 # <codecell>
     pm = PumpModel()
 
@@ -637,7 +705,7 @@ def main():
 
 # <codecell>
     # second batch with clean_features
-    #pm.run_batch(flag_interactions=False, flag_clean_features=True)
+    # pm.run_batch(flag_interactions=False, flag_clean_features=True)
 
 # <codecell>
     # 3rd batch with feature interactions
@@ -649,20 +717,39 @@ def main():
 
 # <codecell>
     #Run parameter optimazation
-    #best = pm.best_RandomForest()
+    print('\n Trying XGBoost with best param and randomazed.')
+    best = pm.best_XGboost(impute_func=imputeTrain,
+                                fill_test_func=fillTest,
+                                flag_clean_features=True)
+    print(best)
 
 
-# <codecell>
-    # set best parameters
+
+# # <codecell>
+#     # set best parameters
     print('Run batch with best parameters')
-    model = RandomForestClassifier(max_depth=18, bootstrap=False,
-            max_features=25, n_estimators=291,n_jobs=-1)
+    # also use KFold to make sure we cross validate
+    model = XGBClassifier(max_depth = best['max_depth'],
+                learning_rate = best['learning_rate'],
+                min_child_weight = best['min_child_weight'],
+                n_estimators = best['n_estimators'])
 
-    y_hat =pm.run_batch_realtest( flag_interactions=False,
+    print('\n Best parameters for RandomForestClassifier.')
+    for k, v in best.items():
+        print(k, v)
+
+
+
+    print('Barch with defaut model')
+    pm.run_batch_realtest(flag_interactions=False,
             impute_func=imputeTrain, fill_test_func=fillTest,
             flag_clean_features=True)
 
-    print(accuracy_score(pm.df_y_test,y_hat))
+    print('Batch with the best parameters')
+    pm.run_batch_realtest(model=model,flag_interactions=False,
+            impute_func=imputeTrain, fill_test_func=fillTest,
+            flag_clean_features=True)
+
 
 # <codecell>
 if __name__ == "__main__":
