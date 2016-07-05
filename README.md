@@ -16,6 +16,10 @@ Team __Hans'nFranz__ gonna "pump... [the water] up!":
 
 ---  
 
+![Web App Screenshot](./figures/app_screenshot.png)  
+
+---  
+
 # Baseline Model 1 - M.V.P. 
 See "APPENDIX - Data Discovery Notes" for reasoning. 
 
